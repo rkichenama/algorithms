@@ -1,0 +1,21 @@
+{
+  "name": "algorithms",
+  "version": "0.0.1",
+  "description": "a playground for algorithms in javascript",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rkichenama/algorithms.git"
+  },
+  "author": "Richard Kichenama (rkichenama@gmail.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rkichenama/algorithms/issues"
+  },
+  "homepage": "https://github.com/rkichenama/algorithms#readme",
+  "dependencies": {
+    "gulp": "github:gulpjs/gulp#4.0"
+  }
+}
