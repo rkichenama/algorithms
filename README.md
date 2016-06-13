@@ -1,5 +1,7 @@
 # Algorithms in Javascript
 
+es6 modules and syntax
+
 inspired by 4th edition Algorithms by Robert Sedgewick and Kevin Wayne
 
 - Sorting
