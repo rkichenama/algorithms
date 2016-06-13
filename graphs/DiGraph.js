@@ -21,6 +21,6 @@ class DiGraph /*extends Graph*/ {
   // reverse the digraph
   reverse () {}
   toString () {}
-}
+};
 
-(modeule && module.exports && (module.exports = DiGraph));
+(module && module.exports && (module.exports = DiGraph));

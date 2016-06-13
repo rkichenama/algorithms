@@ -22,6 +22,6 @@ class Graph {
   */
   adj (v) {}
   toString () {}
-}
+};
 
-(modeule && module.exports && (module.exports = Graph));
+(module && module.exports && (module.exports = Graph));
