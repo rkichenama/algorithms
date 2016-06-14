@@ -12,8 +12,8 @@ const
 
 const paths = {
   src: {
-    js: ['./collections/*.js', './graphs/*.js'],
-    css: ['./collections/*.scss', './graphs/*.scss'],
+    js: ['./collections/**/*.js', './graphs/**/*.js'],
+    css: ['./collections/**/*.scss', './graphs/**/*.scss'],
   },
   dist: {
     dir: './dist/',
