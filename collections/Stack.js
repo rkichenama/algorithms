@@ -5,5 +5,3 @@ class Stack {
   // remove from front
   pop () { this.items.shift(); }
 };
-
-(module && module.exports && (module.exports = Stack));

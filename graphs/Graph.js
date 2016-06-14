@@ -23,5 +23,3 @@ class Graph {
   adj (v) {}
   toString () {}
 };
-
-(module && module.exports && (module.exports = Graph));

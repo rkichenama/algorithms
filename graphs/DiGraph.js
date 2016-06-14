@@ -22,5 +22,3 @@ class DiGraph /*extends Graph*/ {
   reverse () {}
   toString () {}
 };
-
-(module && module.exports && (module.exports = DiGraph));

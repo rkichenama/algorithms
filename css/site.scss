@@ -1,0 +1,176 @@
+@import "variables";
+@import "mixins";
+
+* {
+  box-sizing: border-box;
+  position: relative;
+}
+
+html {
+  padding: 0;
+  &, & body {
+    margin: 0;
+    width: 100%;
+  }
+  body {
+    padding: .25rem;
+  }
+}
+
+@for $i from 1 through 6 {
+  h#{$i} {
+    margin-top: 0;
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+    margin-bottom: 0;
+    line-height: 1.5;
+  }
+}
+
+Flex {
+  &Row, &Col {
+    @extend %flexbox;
+    @include align-items(stretch);
+  }
+  &Row {
+    @include justify-content(center);
+    margin-bottom: .5rem;
+    > * {
+      @include flex-grow(1);
+      @include flex-shrink(1);
+    }
+    &[left] {
+      @include justify-content(flex-start);
+    }
+    &[right] {
+      @include justify-content(flex-end);
+    }
+
+  }
+  &Col {
+    @include justify-content(flex-start);
+    @include flex-direction(column);
+    &[center] {
+      @include align-items(center);
+    }
+    &[right] {
+      @include align-items(flex-end);
+    }
+    > *:only-child {
+      @include flex-grow(1);
+      @include flex-shrink(1);
+    }
+    &:not(:only-child) {
+      padding: 0 .5rem;
+      &:first-child {
+        padding-left: 0;
+      }
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+  }
+}
+
+Card {
+  display: block;
+  margin: 0 .5rem;
+  padding: .5rem;
+  border-radius: 4px;
+  &[center] {
+    text-align: center;
+  }
+  &[right] {
+    text-align: right;
+  }
+}
+
+Deck {
+  @extend FlexRow;
+  @include flex-wrap(wrap);
+
+  > Card {
+    @include flex-grow(0);
+    @include flex-shrink(0);
+    width: 19%;
+    min-width: 350px;
+    margin-left: 0;
+    margin-right: .5rem;
+    margin-bottom: .5rem;
+  }
+}
+
+Styleguide {
+  display: block;
+  @extend %clear-both;
+
+  i {
+    font-style: normal;
+  }
+
+  .box {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    border-radius: 50%;
+    border: 1px solid black;
+  }
+}
+
+@each $theme, $site in $themes {
+  html.#{$theme} {
+    /* Fonts */
+    @each $size, $value in map-deep-get($site, font, size) {
+      .#{$size} { font-size: $value; }
+    }
+    @each $weight, $value in map-deep-get($site, font, weight) {
+      .#{$weight} { font-weight: $value; }
+    }
+    @each $family, $value in map-deep-get($site, font, family) {
+      .#{$family} { font-family: $value; }
+    }
+    body {
+      font-family: map-deep-get($site, font, family, sans), sans-serif;
+      font-size: $base-font-size;
+      line-height: 1.2;
+    }
+    Styleguide {
+      @each $size, $value in map-deep-get($site, font, size) {
+        i.#{$size}:after {
+          content: 'ABC';
+        }
+      }
+    }
+    /* Colors */
+    a {
+      &, &:active, &:visited, &:hover, &focus {
+        text-decoration: none;
+        color: map-deep-get($site, color, highlight);
+      }
+    }
+    body {
+      background-color: map-deep-get($site, color, background);
+      color: map-deep-get($site, color, color);
+    }
+    Card {
+      background-color: transparentize(map-deep-get($site, color, white), .4);
+      box-shadow: 0 0 2px 0 transparentize(map-deep-get($site, color, black), .4) inset;
+    }
+    Styleguide {
+      .box {
+        box-shadow: 0 0 1px 0 transparentize(map-deep-get($site, color, black), .25) inset;
+      }
+      @each $color, $value in map-deep-get($site, color) {
+        i.#{$color} {
+          position: relative;
+          background-color: $value;
+          &:after {
+            margin-left: 120%;
+            content: '#{$color}';
+          }
+        }
+      }
+    }
+  }
+}

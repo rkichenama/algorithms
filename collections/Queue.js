@@ -5,5 +5,3 @@ class Queue {
   // remove from front
   pop () { this.items.pop(); }
 };
-
-(module && module.exports && (module.exports = Queue));

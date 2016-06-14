@@ -12,8 +12,8 @@ const
 
 const paths = {
   src: {
-    js: ['./collections/**/*.js', './graphs/**/*.js'],
-    css: ['./collections/**/*.scss', './graphs/**/*.scss'],
+    js: ['./collections/**/*.js', './graphs/**/*.js', './js/site.js'],
+    css: ['./css/*.scss', './collections/**/*.scss', './graphs/**/*.scss'],
   },
   dist: {
     dir: './dist/',
@@ -42,8 +42,18 @@ function styles () {
 }
 
 const
-  build = gulp.parallel(styles, scripts)
+  styling = gulp.series(styles),
+  scripting = gulp.series(scripts),
+  build = gulp.parallel(styling, scripting)
 ;
 
+function watch (cb) {
+  const w = require('gulp-watch');
+  w(paths.src.css, styling);
+  w(paths.src.js, scripting);
+}
+
+
 gulp.task('build', build);
+gulp.task('watch', watch);
 gulp.task('default', build);

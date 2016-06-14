@@ -39,5 +39,3 @@ class TreeNode {
 class Tree {
   constructor () {}
 };
-
-(module && module.exports && (module.exports = Tree));
