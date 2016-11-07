@@ -20,3 +20,9 @@ inspired by 4th edition Algorithms by Robert Sedgewick and Kevin Wayne
   - Minimum Spanning Trees
   - Shortest Paths
 - (String) Tries
+
+## Incidentally
+
+Functional programming concepts will also be demonstrated
+
+- Currying
