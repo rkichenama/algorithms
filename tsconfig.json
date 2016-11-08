@@ -1,13 +1,28 @@
 {
-  "compileOnSave": false,
   "compilerOptions": {
     "jsx": "react",
     "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": false,
+    "noImplicitAny": true,
     "sourceMap": true
   },
   "exclude": [
     "node_modules",
+    "!node_modules/@types",
     "typings/browser.d.ts",
     "typings/browser"
-  ]
+  ],
+  "filesGlob": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "files": [
+    "./src/app.ts"
+  ],
+  "compileOnSave": false,
+  "buildOnSave": false
 }

@@ -5,7 +5,8 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack-dev-server --content-base dist/ --port 4000 --open",
-    "postinstall": "typings install"
+    "postinstall": "typings install",
+    "test": "jasmine-ts"
   },
   "repository": {
     "type": "git",
@@ -18,8 +19,15 @@
   },
   "homepage": "https://github.com/rkichenama/algorithms#readme",
   "dependencies": {
+    "@types/core-js": "^0.9.34",
+    "@types/jasmine": "^2.5.37",
+    "@types/node": "^6.0.46",
     "css-loader": "^0.25.0",
     "haml-loader": "^0.1.0",
+    "jasmine": "^2.5.2",
+    "jasmine-core": "^2.5.2",
+    "jasmine-spec-reporter": "^2.7.0",
+    "jasmine-ts": "^0.0.3",
     "jsx-typescript": "^1.5.0-alpha.5",
     "markdown-loader": "^0.1.7",
     "node-sass": "^3.11.2",
