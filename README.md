@@ -26,3 +26,4 @@ inspired by 4th edition Algorithms by Robert Sedgewick and Kevin Wayne
 Functional programming concepts will also be demonstrated
 
 - Currying
+- WebWorkers and background tasks
