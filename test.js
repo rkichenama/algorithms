@@ -6,6 +6,7 @@ console.log(jasmine.env);
 jasmine.addReporter(new SpecReporter({
   displaySpecDuration: true
 }));
+/*
 // jasmine.loadConfigFile('spec/support/jasmine.json');
-
+*/
 jasmine.execute();
