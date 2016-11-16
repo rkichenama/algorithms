@@ -1,0 +1,36 @@
+@import "../css/_mixins.scss";
+
+.list-view {
+  height: 300px;
+  @include justify-content(center);
+  @include align-items(flex-end);
+
+  div {
+    @include flex-grow(1);
+    @include flex-shrink(1);
+    text-align: center;
+    border: 1px solid var(--clr-highlight);
+    background-color: var(--clr-highlight);
+
+    margin: 0 4px 0 0;
+    @include transition(height 50ms);
+
+    &:first-child {
+      margin: 0 4px;
+    }
+    &:last-child {
+      margin: 0;
+    }
+
+    &.insert {
+      background-color: var(--clr-accent);
+    }
+    &.swap {
+      background-color: var(--clr-important);
+    }
+    &.compare {
+      background-color: var(--clr-white);
+      border-color: var(--clr-black);
+    }
+  }
+}

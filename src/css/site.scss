@@ -1,4 +1,4 @@
-@import "variables";
+@import "css-variables";
 @import "mixins";
 
 * {
@@ -8,14 +8,28 @@
 
 html {
   padding: 0;
+  font-size: 16px;
+
   &, & body {
     margin: 0;
     width: 100%;
   }
+
   body {
     padding: .25rem;
+    background-color: var(--clr-background);
+    color: var(--clr-color);
+    font-family: var(--font-serif), sans-serif;
+    line-height: 1.2;
   }
 }
+a {
+  &, &:active, &:visited, &:hover, &focus {
+    text-decoration: none;
+    color: var(--clr-highlight);
+  }
+}
+
 
 @for $i from 1 through 6 {
   h#{$i} {
@@ -26,6 +40,73 @@ html {
     line-height: 1.5;
   }
 }
+
+.flex {
+  &Row, &Col {
+    @extend %flexbox;
+    @include align-content(stretch);
+    .no- {
+      &grow { @include flex-grow(0); }
+      &shrink { @include flex-shrink(0); }
+    }
+  }
+  &Row {
+    @include justify-content(center);
+    margin-bottom: .5rem;
+    > * {
+      @include flex-grow(1);
+      @include flex-shrink(1);
+    }
+    &[left] {
+      @include justify-content(flex-start);
+    }
+    &[right] {
+      @include justify-content(flex-end);
+    }
+
+  }
+  &Col {
+    @include justify-content(flex-start);
+    @include flex-direction(column);
+    &[center] {
+      @include align-items(center);
+    }
+    &[right] {
+      @include align-items(flex-end);
+    }
+    > *:only-child {
+      @include flex-grow(1);
+      @include flex-shrink(1);
+    }
+    &:not(:only-child) {
+      padding: 0 .5rem;
+      &:first-child {
+        padding-left: 0;
+      }
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+  }
+}
+
+.card {
+  display: block;
+  margin: 0 .5rem;
+  padding: .5rem;
+  border-radius: 4px;
+  background-color: var(--clr-white);
+  box-shadow: 0 0 2px 0 var(--clr-black) inset;
+
+  &[center] {
+    text-align: center;
+  }
+  &[right] {
+    text-align: right;
+  }
+}
+
+/*
 
 Flex {
   &Row, &Col {
@@ -118,59 +199,4 @@ Styleguide {
   }
 }
 
-@each $theme, $site in $themes {
-  html.#{$theme} {
-    /* Fonts */
-    @each $size, $value in map-deep-get($site, font, size) {
-      .#{$size} { font-size: $value; }
-    }
-    @each $weight, $value in map-deep-get($site, font, weight) {
-      .#{$weight} { font-weight: $value; }
-    }
-    @each $family, $value in map-deep-get($site, font, family) {
-      .#{$family} { font-family: $value; }
-    }
-    body {
-      font-family: map-deep-get($site, font, family, sans), sans-serif;
-      font-size: $base-font-size;
-      line-height: 1.2;
-    }
-    Styleguide {
-      @each $size, $value in map-deep-get($site, font, size) {
-        i.#{$size}:after {
-          content: 'ABC';
-        }
-      }
-    }
-    /* Colors */
-    a {
-      &, &:active, &:visited, &:hover, &focus {
-        text-decoration: none;
-        color: map-deep-get($site, color, highlight);
-      }
-    }
-    body {
-      background-color: map-deep-get($site, color, background);
-      color: map-deep-get($site, color, color);
-    }
-    Card {
-      background-color: transparentize(map-deep-get($site, color, white), .4);
-      box-shadow: 0 0 2px 0 transparentize(map-deep-get($site, color, black), .4) inset;
-    }
-    Styleguide {
-      .box {
-        box-shadow: 0 0 1px 0 transparentize(map-deep-get($site, color, black), .25) inset;
-      }
-      @each $color, $value in map-deep-get($site, color) {
-        i.#{$color} {
-          position: relative;
-          background-color: $value;
-          &:after {
-            margin-left: 120%;
-            content: '#{$color}';
-          }
-        }
-      }
-    }
-  }
-}
+*/

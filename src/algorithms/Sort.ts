@@ -10,7 +10,7 @@ export class Sort {
   }
 
   static shell (list: any[]): any[] {
-    let clone = list.slice(0);
+    let clone = [...list];
     let h = 1, n = clone.length;
     while (h < n) { h = 3 * h + 1; }
     while (h > 0) {
@@ -39,66 +39,67 @@ export class Sort {
     return clone;
   }
 
+  /*
+    # split in half
+    m = n / 2
+
+    # recursive sorts
+    sort a[1..m]
+    sort a[m+1..n]
+
+    # merge sorted sub-arrays using temp array
+    b = copy of a[1..m]
+    i = 1, j = m+1, k = 1
+    while i <= m and j <= n,
+        a[k++] = (a[j] < b[i]) ? a[j++] : b[i++]
+        → invariant: a[1..k] in final position
+    while i <= m,
+        a[k++] = b[i++]
+        → invariant: a[1..k] in final position
+  */
   static merge (list: any[]): any[] {
-    /*
-      # split in half
-      m = n / 2
-
-      # recursive sorts
-      sort a[1..m]
-      sort a[m+1..n]
-
-      # merge sorted sub-arrays using temp array
-      b = copy of a[1..m]
-      i = 1, j = m+1, k = 1
-      while i <= m and j <= n,
-          a[k++] = (a[j] < b[i]) ? a[j++] : b[i++]
-          → invariant: a[1..k] in final position
-      while i <= m,
-          a[k++] = b[i++]
-          → invariant: a[1..k] in final position
-    */
     return [];
   }
 
+  /*
+    # heapify
+    for i = n/2:1, sink(a,i,n)
+    → invariant: a[1,n] in heap order
+
+    # sortdown
+    for i = 1:n,
+        swap a[1,n-i+1]
+        sink(a,1,n-i)
+        → invariant: a[n-i+1,n] in final position
+    end
+
+    # sink from i in a[1..n]
+    function sink(a,i,n):
+        # {lc,rc,mc} = {left,right,max} child index
+        lc = 2*i
+        if lc > n, return # no children
+        rc = lc + 1
+        mc = (rc > n) ? lc : (a[lc] > a[rc]) ? lc : rc
+        if a[i] >= a[mc], return # heap ordered
+        swap a[i,mc]
+        sink(a,mc,n)
+  */
   static heap (list: any[]): any[] {
-    /*
-      # heapify
-      for i = n/2:1, sink(a,i,n)
-      → invariant: a[1,n] in heap order
-
-      # sortdown
-      for i = 1:n,
-          swap a[1,n-i+1]
-          sink(a,1,n-i)
-          → invariant: a[n-i+1,n] in final position
-      end
-
-      # sink from i in a[1..n]
-      function sink(a,i,n):
-          # {lc,rc,mc} = {left,right,max} child index
-          lc = 2*i
-          if lc > n, return # no children
-          rc = lc + 1
-          mc = (rc > n) ? lc : (a[lc] > a[rc]) ? lc : rc
-          if a[i] >= a[mc], return # heap ordered
-          swap a[i,mc]
-          sink(a,mc,n)
-    */
     return [];
   }
 
+  // [...list.slice(0,2), list[8], ...list.slice(2,8)] as an insert
   static _insertion (list: any[], s = 1): void {
     let n = list.length;
-    for (let i = s; i < n; i++)
+    for (let i = s; i < n; i++) {
       for (let k = i; k > 0 && (list[k] < list[k - 1]); k--)
         [list[k - 1], list[k]] = [list[k], list[k - 1]];
+    }
   }
 
   static _bubble (list: any[]): any[] {
     let n = list.length;
     for (let i = 0; i < n; i++) {
-      let swapped = false;
       for (let k = (n - 1); k > i; k--)
         if (list[k] < list[k - 1])
           [list[k - 1], list[k]] = [list[k], list[k - 1]];
@@ -118,7 +119,7 @@ export class Sort {
     return list;
   }
 };
-
+/*
 const list = [701, 301, 132, 57, 23, 10, 4, 1];
 [
     Sort.quick(list),
@@ -131,3 +132,4 @@ const list = [701, 301, 132, 57, 23, 10, 4, 1];
         arr.forEach(i => document.write(`${i}<br/>`));
         document.write('<hr />');
     });
+*/

@@ -1,9 +1,9 @@
 module.exports = {
   resolve: {
-    extensions: [ '', '.webpack.js', '.web.js', 'ts', '.js' ],
+    extensions: [ '', '.webpack.js', '.web.js', '.ts', '.tsx', '.js' ],
   },
   devtool: 'source-map',
-  entry: './src/app.ts',
+  entry: './src/app.tsx',
   output: {
     path: __dirname + '/dist',
     filename: 'pack.js',
@@ -15,7 +15,7 @@ module.exports = {
     loaders: [
       { test: /\.css$/, loader: 'styles!css' },
       { test: /\.(scss|sass)$/, loaders: ['style', 'css?sourceMap', 'sass?sourceMap'] },
-      { test: /\.ts$/, loader: 'ts-loader?typescriptCompiler=jsx-typescript' },
+      { test: /\.tsx?$/, loader: 'ts-loader?typescriptCompiler=jsx-typescript' },
     ],
   },
   externals: {
