@@ -44,7 +44,11 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
     this.list
       .filter(({type}) => /swap|insert|compare/.test(type))
       .distinctUntilChanged()
-      .subscribe(this.calculate.bind(this))
+      .subscribe(this.calculate.bind(this));
+    this.list
+      .filter(({type}) => /complete/.test(type))
+      .subscribe((action) => console.info(this.props.algorithm, this.list.history().length));
+
   }
 
   calculate (action: Action) {

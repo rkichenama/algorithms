@@ -11,6 +11,7 @@ export class Finished extends Action {
 }
 
 export class List extends Subject<any> {
+  private list: any[];
   private actions: Action[];
   private comparitor: Function;
 
@@ -22,8 +23,9 @@ export class List extends Subject<any> {
     }
   }
 
-  constructor (private list: any[]) {
+  constructor (list: any[]) {
     super();
+    this.list = [...list];
     this.actions = [];
     this.setComparitor();
   }

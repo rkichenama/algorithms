@@ -52,7 +52,7 @@ export class ListVisualization extends React.Component<ListVisualizationProps, L
               .forEach((action, i) => {
                 switch (true) {
                   default:
-                    setTimeout(() => console.info(list.history()), 100 * (i + .5)); break;
+                    /*setTimeout(() => console.info(list.history()), 100 * (i + .5));*/ break;
                   case /insert/.test(action.type):
                   case /swap/.test(action.type):
                   case /compare/.test(action.type):

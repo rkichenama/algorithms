@@ -17,4 +17,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
     <SortDetailCard list={arr} algorithm={'shell'} />,
     document.querySelector('#i')
   );
+  ReactDOM.render(
+    <SortDetailCard list={arr} algorithm={'selection'} />,
+    document.querySelector('#j')
+  );
 });
