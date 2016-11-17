@@ -26,6 +26,7 @@ export interface ListVisualizationState {
 
 export class ListVisualization extends React.Component<ListVisualizationProps, ListVisualizationState> {
   public listView: any;
+  private doHeight: Function;
 
   constructor (props: ListVisualizationProps) {
     super(props);
@@ -35,6 +36,7 @@ export class ListVisualization extends React.Component<ListVisualizationProps, L
   componentWillReceiveProps (nextProps: ListVisualizationProps) { this.initList(nextProps); }
 
   initList ({ list }: ListVisualizationProps = this.props) {
+    this.doHeight = (n) => `${Math.floor((n / list.largest) * 100)}%`;
     this.setState({ list: list.asArray() },
       // () => l
       //   .distinctUntilChanged()
@@ -55,6 +57,7 @@ export class ListVisualization extends React.Component<ListVisualizationProps, L
                     /*setTimeout(() => console.info(list.history()), 100 * (i + .5));*/ break;
                   case /insert/.test(action.type):
                   case /swap/.test(action.type):
+                  case /assignment/.test(action.type):
                   case /compare/.test(action.type):
                     setTimeout(() => this[action.type](action), 100 * (i + .5)); break;
                 }
@@ -102,18 +105,22 @@ export class ListVisualization extends React.Component<ListVisualizationProps, L
     D.style.height = height;
   }
 
+  assignment ({src, value}) {
+    const view = this.listView;
+    let S = view.querySelector(`div:nth-child(${src + 1})`);
+    S.classList.add('insert');
+    S.style.height = this.doHeight(value);
+  }
+
   complete ({list}) { this.setState({ list }); }
 
   render () {
     // return (<div key={_} dangerouslySetInnerHTML={{__html: r}}></div>);
     const {list: arr} = this.state;
-    const
-      largest = Math.max.apply(null, arr);
-    const doHeight = (n) => `${Math.floor((n / largest) * 100)}%`;
     return (
       <div className='flexRow list-view' ref={ (d) => this.listView = d }>
         {arr.map((_, i) => (
-          <div key={i} style={{ height: doHeight(_) }}>
+          <div key={i} style={{ height: this.doHeight(_) }}>
           </div>
         ))}
       </div>

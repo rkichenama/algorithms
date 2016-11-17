@@ -10,6 +10,12 @@ export class Finished extends Action {
   }
 }
 
+export class Assignment extends Action {
+  constructor (src: number, public value: any) {
+    super('assignment', src, 0);
+  }
+}
+
 export class List extends Subject<any> {
   private list: any[];
   private actions: Action[];
@@ -18,8 +24,8 @@ export class List extends Subject<any> {
   static defaultComparitor (a: any, b: any): number {
     switch (true) {
       default: return 0;
-      case b > a: return +1;
-      case a > b: return -1;
+      case b > a: return -1;
+      case a > b: return +1;
     }
   }
 
@@ -65,11 +71,19 @@ export class List extends Subject<any> {
     ];
     this.mark(new Action('insert', i, j));
   }
+  put (i: number, v: any): void {
+    this.list[i] = v;
+    this.mark(new Assignment(i, v));
+  }
   compare (i: number, j: number): number {
     this.mark(new Action('compare', i, j));
     return this.comparitor(this.list[i], this.list[j]);
   }
-  gt (i: number, j: number): boolean { return this.compare(i, j) === -1; }
-  lt (i: number, j: number): boolean { return this.compare(i, j) === +1; }
+  gt (i: number, j: number): boolean { return this.compare(i, j) === +1; }
+  lt (i: number, j: number): boolean { return this.compare(i, j) === -1; }
   eq (i: number, j: number): boolean { return this.compare(i, j) === 0; }
+  get largest () {
+    return this.list
+      .reduce((t, c) => (this.comparitor(t, c) === -1 ? t : c), this.list[0]);
+  }
 }

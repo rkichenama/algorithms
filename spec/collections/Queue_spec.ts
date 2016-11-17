@@ -1,10 +1,10 @@
-import { Stack } from '../src/collections/Stack';
+import { Queue } from '../../src/collections/Queue';
 
-describe('Stack', () => {
-  let stack: Stack;
+describe('Queue', () => {
+  let stack: Queue;
 
   beforeEach(() => {
-    stack = new Stack();
+    stack = new Queue();
   });
   afterEach(() => {
     // delete stack;
@@ -26,11 +26,11 @@ describe('Stack', () => {
     expect(stack.toArray().length).toEqual(0);
   });
 
-  it('should work like a stack', () => {
+  it('should work like a queue', () => {
     stack.push(2);
     stack.push(3);
-    expect(stack.toString()).toEqual('[3,2]');
-    expect(stack.pop()).toEqual(3);
-    expect(stack.toString()).toEqual('[2]');
+    expect(stack.toString()).toEqual('[2,3]');
+    expect(stack.pop()).toEqual(2);
+    expect(stack.toString()).toEqual('[3]');
   });
 });

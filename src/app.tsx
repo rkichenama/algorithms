@@ -18,7 +18,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     document.querySelector('#i')
   );
   ReactDOM.render(
-    <SortDetailCard list={arr} algorithm={'selection'} />,
+    <SortDetailCard list={arr} algorithm={'shell_swap'} />,
     document.querySelector('#j')
+  );
+  ReactDOM.render(
+    <SortDetailCard list={arr} algorithm={'selection'} />,
+    document.querySelector('#k')
   );
 });

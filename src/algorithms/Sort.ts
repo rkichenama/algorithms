@@ -18,7 +18,7 @@ export class Sort {
       for (let k = h; k < n; k++) {
         let j = k, tmp = clone[k];
         for (; j > (h - 1) && (clone[j - h] > clone[k]); j -= h) {
-          [clone[j - k], clone[k]] = [clone[k], clone[j - h]];
+          [clone[j - h], clone[k]] = [clone[k], clone[j - h]];
         }
         (j !== k) && (clone[j] = tmp);
       }

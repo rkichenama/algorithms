@@ -42,7 +42,7 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
       s: 0, i: 0, c: 0, m: 0
     };
     this.list
-      .filter(({type}) => /swap|insert|compare/.test(type))
+      .filter(({type}) => /swap|insert|compare|assignment/.test(type))
       .distinctUntilChanged()
       .subscribe(this.calculate.bind(this));
     this.list
@@ -52,8 +52,8 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
   }
 
   calculate (action: Action) {
-    const key = `${action.type[0]}`;
-    this[`_${action.type}`].innerText = ++this.counts[key];
+    const key = `${/assignment/.test(action.type) ? 'i': action.type[0]}`;
+    this[`_${/assignment/.test(action.type) ? 'insert' : action.type}`].innerText = ++this.counts[key];
     if (/insert/.test(action.type)) {
       this.counts.m += (action.src - action.dest);
       this._moves.innerText = Math.ceil(this.counts.m  / this.counts.i);

@@ -1,4 +1,4 @@
-import { Tree } from '../src/collections/Tree';
+import { Tree } from '../../src/collections/Tree';
 
 describe('Tree', () => {
   let tree: Tree;
