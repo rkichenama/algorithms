@@ -12,88 +12,83 @@ export class Sort {
   static shell (list: any[]): any[] {
     let clone = [...list];
     let h = 1, n = clone.length;
-    while (h < n) { h = 3 * h + 1; }
+    while (h < (n/3)) { h = 3 * h + 1; }
     while (h > 0) {
       h = Math.floor(2 * h / 3);
-      for (let k = h; k < n; k++) {
-        let j = k, tmp = clone[k];
-        for (; j > (h - 1) && (clone[j - h] > clone[k]); j -= h) {
-          [clone[j - h], clone[k]] = [clone[k], clone[j - h]];
-        }
-        (j !== k) && (clone[j] = tmp);
-      }
+      for (let k = h; k < n; k++)
+        for (let j = k; j > 0 && (clone[j - h] > clone[j]); j -= h)
+          [clone[j - h], clone[j]] = [clone[j], clone[j - h]];
     }
     return clone;
   }
 
   static insertion (list: any[]): any[] {
     let clone = list.slice(0);
-    Sort._insertion(clone);
+    for (let i = 1; i < clone.length; i++) {
+      let k = i;
+      for (; k > 0 && (clone[k - 1] > clone[i]); k--) {}
+      [
+        ...clone.slice(0, k),
+        clone[i],
+        ...clone.slice(k, i),
+        ...clone.slice(i + 1)
+      ].forEach((val, i) => ((clone[i] !== val) && (clone[i] = val)));
+    }
     return clone;
   }
 
   static bubble (list: any[]): any[] {
     let clone = list.slice(0);
-    Sort._bubble(clone);
+    for (let i = 0; i < clone.length; i++) {
+      for (let k = (clone.length - 1); k > i; k--)
+        if (clone[k] < clone[k - 1])
+          [clone[k - 1], clone[k]] = [clone[k], clone[k - 1]];
+    }
     return clone;
   }
 
   static selection (list: any[]): any[] {
     let clone = list.slice(0);
-    Sort._selection(clone);
+    for (let i = 0; i < clone.length; i++) {
+      let j = i;
+      for (let k = (i + 1); k < clone.length; k++)
+        if (clone[k] < clone[j])
+          j = k;
+      [clone[i], clone[j]] = [clone[j], clone[i]];
+    }
     return clone;
   }
 
-  /*
-    # split in half
-    m = n / 2
-
-    # recursive sorts
-    sort a[1..m]
-    sort a[m+1..n]
-
-    # merge sorted sub-arrays using temp array
-    b = copy of a[1..m]
-    i = 1, j = m+1, k = 1
-    while i <= m and j <= n,
-        a[k++] = (a[j] < b[i]) ? a[j++] : b[i++]
-        → invariant: a[1..k] in final position
-    while i <= m,
-        a[k++] = b[i++]
-        → invariant: a[1..k] in final position
-  */
   static merge (list: any[]): any[] {
-    return [];
+    const
+      meld = (list, clone, lo, mid, hi) => {
+        for (let k = lo; k <= hi; k++)
+          clone[k] = list[k];
+
+        for (let k = lo, i = lo, j = mid + 1; k <= hi; k++)
+          switch (true) {
+            case (i > mid): list[k] = clone[j++]; break;
+            case (j > hi): list[k] = clone[i++]; break;
+            case (clone[j] < clone[i]): list[k] = clone[j++]; break;
+            default: list[k] = clone[i++]; break;
+          }
+      },
+      order = (list, clone, lo, hi) => {
+        if (hi <= lo) { return; }
+        let mid = Math.floor(lo + (hi - lo) / 2);
+
+        order(list, clone, lo, mid);
+        order(list, clone, mid + 1, hi);
+
+        meld(list, clone, lo, mid, hi);
+      }
+    ;
+
+    let clone = [...list];
+    order(list, clone, 0, list.length - 1);
+    return list;
   }
 
-  /*
-    # heapify
-    for i = n/2:1, sink(a,i,n)
-    → invariant: a[1,n] in heap order
-
-    # sortdown
-    for i = 1:n,
-        swap a[1,n-i+1]
-        sink(a,1,n-i)
-        → invariant: a[n-i+1,n] in final position
-    end
-
-    # sink from i in a[1..n]
-    function sink(a,i,n):
-        # {lc,rc,mc} = {left,right,max} child index
-        lc = 2*i
-        if lc > n, return # no children
-        rc = lc + 1
-        mc = (rc > n) ? lc : (a[lc] > a[rc]) ? lc : rc
-        if a[i] >= a[mc], return # heap ordered
-        swap a[i,mc]
-        sink(a,mc,n)
-  */
-  static heap (list: any[]): any[] {
-    return [];
-  }
-
-  // [...list.slice(0,2), list[8], ...list.slice(2,8)] as an insert
   static _insertion (list: any[], s = 1): void {
     let n = list.length;
     for (let i = s; i < n; i++) {

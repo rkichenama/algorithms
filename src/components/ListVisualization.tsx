@@ -78,7 +78,7 @@ export class ListVisualization extends React.Component<ListVisualizationProps, L
   compare ({src, dest}) {
     const view = this.listView;
     let S = view.querySelector(`div:nth-child(${src + 1})`), D = view.querySelector(`div:nth-child(${dest + 1})`);
-    [S, D].forEach((T) => T.classList.add('compare'));
+    [S, D].forEach((T, i, a) => T.classList.add('compare'));
   }
 
   swap ({src, dest}) {

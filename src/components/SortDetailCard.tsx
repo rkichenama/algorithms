@@ -2,6 +2,7 @@ import * as React from 'react';
 import { List, Action } from '../collections/List';
 import { ObservableSort } from '../algorithms/ObservableSort';
 import { ListVisualization } from './ListVisualization';
+import { WikipediaService } from '../util/WikipediaService';
 
 import "./SortDetailCard.scss";
 
@@ -23,6 +24,7 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
   private _insert: any;
   private _compare: any;
   private _moves: any;
+  private _desc: any;
 
   constructor (props: SortDetailProps) {
     super(props);
@@ -30,6 +32,10 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
 
   componentDidMount () {
     let sort = new ObservableSort(this.list);
+    (new WikipediaService()).pullID(15205) //Insertion Sort
+      .then((json) => {
+        this._desc.innerHTML = json.text["*"];
+      });
     setTimeout(() => sort[this.props.algorithm](), 1000);
   }
 
@@ -66,8 +72,23 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
         <div className='flexCol'>
           <heading>{this.props.algorithm}</heading>
           <section className='flexRow'>
-            <code className='no-grow'>pseudocode</code>
-            <div>Description</div>
+            <code className='no-grow'>
+              {`insertion_sort (list: any[]): any[] {
+                let clone = list.slice(0);
+                for (let i = 1; i < clone.length; i++) {
+                  let k = i;
+                  for (; k > 0 && (clone[k - 1] > clone[i]); k--) {}
+                  [
+                    ...clone.slice(0, k),
+                    clone[i],
+                    ...clone.slice(k, i),
+                    ...clone.slice(i + 1)
+                  ].forEach((val, i) => ((clone[i] !== val) && (clone[i] = val)));
+                }
+                return clone;
+              }`}
+            </code>
+            <div className='wiki' ref={d => this._desc = d}>Description</div>
           </section>
           <section className='flexRow'>
             <dl className='no-grow'>

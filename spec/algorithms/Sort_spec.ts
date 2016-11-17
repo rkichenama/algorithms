@@ -12,9 +12,10 @@ describe('Sort', () => {
     arr.length = 0; sorted.length = 0;
   })
 
-  xit('should sort correctly with shell sort', () => expect((Sort.shell(arr)).join(',')).toEqual(sorted.join(',')));
+  it('should sort correctly with shell sort', () => expect((Sort.shell(arr)).join(',')).toEqual(sorted.join(',')));
   it('should sort correctly with insertion sort', () => expect((Sort.insertion(arr)).join(',')).toEqual(sorted.join(',')));
   it('should sort correctly with selection sort', () => expect((Sort.selection(arr)).join(',')).toEqual(sorted.join(',')));
   it('should sort correctly with bubble sort', () => expect((Sort.bubble(arr)).join(',')).toEqual(sorted.join(',')));
   it('should sort correctly with quick sort', () => expect((Sort.quick(arr)).join(',')).toEqual(sorted.join(',')));
+  it('should sort correctly with merge sort', () => expect((Sort.merge(arr)).join(',')).toEqual(sorted.join(',')));
 });

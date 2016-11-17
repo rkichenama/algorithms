@@ -3,6 +3,7 @@ import "./css/site.scss";
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { SortDetailCard } from './components/SortDetailCard';
+import { FetchService } from './util/FetchService';
 
 document.addEventListener('DOMContentLoaded', (event) => {
   const arr = [];

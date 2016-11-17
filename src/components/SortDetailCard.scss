@@ -6,6 +6,13 @@
     text-align: center;
   }
 
+  .wiki {
+    position: relative;
+    .infobox {
+      float: right;
+    }
+  }
+
   dl, code {
     margin: 0 16px 0 0;
     width: 212px;

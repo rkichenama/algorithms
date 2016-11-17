@@ -84,6 +84,6 @@ export class List extends Subject<any> {
   eq (i: number, j: number): boolean { return this.compare(i, j) === 0; }
   get largest () {
     return this.list
-      .reduce((t, c) => (this.comparitor(t, c) === -1 ? t : c), this.list[0]);
+      .reduce((t, c) => (this.comparitor(t, c) === +1 ? t : c), this.list[0]);
   }
 }
