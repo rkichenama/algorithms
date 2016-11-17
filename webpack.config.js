@@ -1,6 +1,7 @@
 module.exports = {
   resolve: {
     extensions: [ '', '.webpack.js', '.web.js', '.ts', '.tsx', '.js' ],
+    modulesDirectories: [ 'node_modules' ],
   },
   devtool: 'source-map',
   entry: './src/app.tsx',
@@ -13,7 +14,7 @@ module.exports = {
       { test: /\.js$/, loader: 'source-map-loader' },
     ],
     loaders: [
-      { test: /\.css$/, loader: 'styles!css' },
+      { test: /\.css$/, loader: 'style!css' },
       { test: /\.(scss|sass)$/, loaders: ['style', 'css?sourceMap', 'sass?sourceMap'] },
       { test: /\.tsx?$/, loader: 'ts-loader?typescriptCompiler=jsx-typescript' },
     ],

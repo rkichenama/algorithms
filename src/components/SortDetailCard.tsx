@@ -4,6 +4,9 @@ import { ObservableSort } from '../algorithms/ObservableSort';
 import { ListVisualization } from './ListVisualization';
 import { WikipediaService } from '../util/WikipediaService';
 
+import * as hljs from 'highlight.js';
+
+require("highlight.js/styles/github-gist.css");
 import "./SortDetailCard.scss";
 
 export interface SortDetailProps {
@@ -25,6 +28,7 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
   private _compare: any;
   private _moves: any;
   private _desc: any;
+  private _code: any;
 
   constructor (props: SortDetailProps) {
     super(props);
@@ -35,6 +39,7 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
     (new WikipediaService()).pullID(15205) //Insertion Sort
       .then((json) => {
         this._desc.innerHTML = json.text["*"];
+        hljs.highlightBlock(this._code);
       });
     setTimeout(() => sort[this.props.algorithm](), 1000);
   }
@@ -72,22 +77,22 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
         <div className='flexCol'>
           <heading>{this.props.algorithm}</heading>
           <section className='flexRow'>
-            <code className='no-grow'>
-              {`insertion_sort (list: any[]): any[] {
-                let clone = list.slice(0);
-                for (let i = 1; i < clone.length; i++) {
-                  let k = i;
-                  for (; k > 0 && (clone[k - 1] > clone[i]); k--) {}
-                  [
-                    ...clone.slice(0, k),
-                    clone[i],
-                    ...clone.slice(k, i),
-                    ...clone.slice(i + 1)
-                  ].forEach((val, i) => ((clone[i] !== val) && (clone[i] = val)));
-                }
-                return clone;
-              }`}
-            </code>
+            <pre><code className='no-grow typescript' ref={ d => this._code = d }>
+{`insertion_sort (list: any[]): any[] {
+  let clone = list.slice(0);
+  for (let i = 1; i < clone.length; i++) {
+    let k = i;
+    for (; k > 0 && (clone[k - 1] > clone[i]); k--) {}
+    [
+      ...clone.slice(0, k),
+      clone[i],
+      ...clone.slice(k, i),
+      ...clone.slice(i + 1)
+    ].forEach((val, i) => ((clone[i] !== val) && (clone[i] = val)));
+  }
+  return clone;
+}`}
+            </code></pre>
             <div className='wiki' ref={d => this._desc = d}>Description</div>
           </section>
           <section className='flexRow'>

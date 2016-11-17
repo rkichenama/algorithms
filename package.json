@@ -21,10 +21,12 @@
   "dependencies": {
     "@types/chai": "^3.4.34",
     "@types/core-js": "^0.9.34",
+    "@types/highlight.js": "^9.1.8",
     "@types/jasmine": "^2.5.37",
     "@types/node": "^6.0.46",
     "css-loader": "^0.25.0",
     "haml-loader": "^0.1.0",
+    "highlight.js": "^9.8.0",
     "jasmine": "^2.5.2",
     "jasmine-core": "^2.5.2",
     "jasmine-spec-reporter": "^2.7.0",
