@@ -10,13 +10,14 @@
     position: relative;
     .infobox {
       float: right;
+      z-index: 5;
     }
   }
 
   code, dl {
     margin: 0 16px 0 0;
   }
-  
+
   dl {
     width: 212px;
   }

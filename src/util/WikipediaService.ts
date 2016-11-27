@@ -21,6 +21,8 @@ export class WikipediaService extends FetchService {
           .replace(/^\/\*\*\//, '')
           .replace(/^\(/, '')
           .replace(/\)$/, '')
+          .replace(/src\=\\"\/\//ig, 'src=\\"https://')
+          .replace(/href\=\\"\//ig, 'href=\\"https://en.wikipedia.org/')
       ))
       .then((json) => json.parse)
       ;

@@ -38,14 +38,6 @@ export class ListVisualization extends React.Component<ListVisualizationProps, L
   initList ({ list }: ListVisualizationProps = this.props) {
     this.doHeight = (n) => `${Math.floor((n / list.largest) * 100)}%`;
     this.setState({ list: list.asArray() },
-      // () => l
-      //   .distinctUntilChanged()
-      //   .subscribe(
-      //     action => {
-      //       console.info(action);
-      //       this[action.type](action);
-      //     }
-      //   )
       () => list
         .filter(({type}) => /complete/.test(type))
         .subscribe(
@@ -120,9 +112,9 @@ export class ListVisualization extends React.Component<ListVisualizationProps, L
     return (
       <div className='flexRow list-view' ref={ (d) => this.listView = d }>
         {arr.map((_, i) => (
-          <div key={i} style={{ height: this.doHeight(_) }}>
-          </div>
+          <div key={i} style={{ height: this.doHeight(_) }}></div>
         ))}
+        <canvas></canvas>
       </div>
     );
   }
