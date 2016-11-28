@@ -5,7 +5,7 @@
   "scripts": {
     "build": "webpack --display-error-details",
     "dev": "webpack-dev-server --content-base dist/ --port 4000 --open",
-    "postinstall": "typings install",
+    "postinstall": "typings install && cp ./node_modules/react/dist/react.js ./dist/react.js && cp ./node_modules/react-dom/dist/react-dom.js ./dist/react-dom.js",
     "test": "jasmine-ts"
   },
   "repository": {
@@ -25,6 +25,7 @@
     "@types/jasmine": "^2.5.37",
     "@types/node": "^6.0.46",
     "css-loader": "^0.25.0",
+    "file-loader": "^0.9.0",
     "haml-loader": "^0.1.0",
     "highlight.js": "^9.8.0",
     "jasmine": "^2.5.2",

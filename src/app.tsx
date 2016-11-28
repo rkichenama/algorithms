@@ -5,6 +5,8 @@ import * as ReactDOM from 'react-dom';
 import { SortDetailCard } from './components/SortDetailCard';
 import { FetchService } from './util/FetchService';
 
+require('./demo.html');
+
 document.addEventListener('DOMContentLoaded', (event) => {
   const arr = [];
   for (let i = 0; i < 100; i++)

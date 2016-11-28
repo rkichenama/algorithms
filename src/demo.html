@@ -1,85 +1,23 @@
 <!doctype html>
+<html lang="en">
 
-<html lang="en" class="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algorithms</title>
+    <script src="./react.js"></script>
+    <script src="./react-dom.js"></script>
+    <script src="./pack.js"></script>
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title></title>
-  <link href="./dist/styles.min.css" media="all" rel="stylesheet" />
-  <script src="./dist/scripts.min.js"></script>
-  <script>
-  function writeHere (str) { document.write(str); }
-  function example (className) { return '<i class="' + className + '"></i>'; }
-  </script>
-</head>
-
-<body>
-  <FlexRow class="huge"><Card class="huge" center>👓</Card></FlexRow>
-
-  <Styleguide>
-    <Deck>
-      <Card>
-        <FlexCol>
-          <script>
-            ['black', 'white', 'background', 'color', 'highlight', 'accent', 'important']
-              .reverse()
-              .map(function (className) { return 'box ' + className; })
-              .map(example)
-              .forEach(writeHere)
-              // .forEach(function (color) { document.write('<i class="box ' + color + '"></i>') })
-          </script>
-        </FlexCol>
-      </Card>
-      <Card>
-        <FlexCol>
-          <script>
-            var
-              sizes = ['fine', 'small', 'medium', 'large', 'huge'].reverse(),
-              weights = ['light', 'normal', 'semi-bold', 'bold']
-            ;
-            ['sans', 'serif'].forEach(function (family) {
-              writeHere('<FlexRow center>' + family + '</FlexRow>');
-              sizes
-                .map(function (size) {
-                  return '<FlexRow>' + weights
-                    .map(function (weight) { return example(family + ' ' + size + ' ' + weight); })
-                    .join('') + '</FlexRow>';
-                })
-                .map(writeHere);
-            });
-          </script>
-        </FlexCol>
-      </Card>
-      <Card>
-        <FlexCol center>
-          <a href="#">Link</a>
-          <section>
-            <a href="#">Link</a>
-            <a href="#">Link</a>
-            <a href="#">Link</a>
-            <a href="#">Link</a>
-          </section>
-          <button>Go</button>
-          <section>
-            <button>Go</button>
-            <button>Go</button>
-            <button>Go</button>
-          </section>
-        </FlexCol>
-      </Card>
-      <Card>
-        <FlexCol center>
-          <h1>heading</h1>
-          <h2>heading</h2>
-          <h3>heading</h3>
-          <h4>heading</h4>
-          <h5>heading</h5>
-          <h6>heading</h6>
-        </FlexCol>
-      </Card>
-    </Deck>
-  </Styleguide>
-</body>
+  <body class="dark">
+    <div id="h"></div>
+    <div id="i"></div>
+    <div id="j"></div>
+    <div id="k"></div>
+    <script>
+      window.setInterval( () => document.body.classList.toggle('dark'), 5 * 60 * 1000 );
+    </script>
+  </body>
 
 </html>
