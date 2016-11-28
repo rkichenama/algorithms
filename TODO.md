@@ -1,14 +1,14 @@
 # TODOs
 
-- test
-- use tabs to differentiate the data for the sort algorithms
-- dynamically load the wiki article and the typescript for the sort
-- use `requestAnimationFrame` for animation
-- enforce a responsive page layout
-- create the `Graph` and `DiGraph`
-  - visualizations too
-- figure out why origin is a refused for fetching
-- 'Gracefully' handle old browsers and IE
+- [ ] test
+- [ ] use tabs to differentiate the data for the sort algorithms
+- [ ] dynamically load the wiki article and the typescript for the sort
+- [ ] use `requestAnimationFrame` for animation
+- [ ] enforce a responsive page layout
+- [ ] create the `Graph` and `DiGraph`
+  - [ ] visualizations too
+- [ ] figure out why origin is a refused for fetching
+- [ ] 'Gracefully' handle old browsers and IE
 
 ## Animations
 
