@@ -35,6 +35,7 @@ export class List extends Subject<any> {
     this.actions = [];
     this.setComparitor();
   }
+
   add (...args): void {
     this.list = [...this.list, ...args];
   }
@@ -58,11 +59,23 @@ export class List extends Subject<any> {
   setComparitor (fn: Function = List.defaultComparitor): void {
     this.comparitor = fn;
   }
+
+  /**
+   *
+   */
   swap (i: number, j: number): void {
     [this.list[i], this.list[j]] = [this.list[j], this.list[i]]
     this.mark(new Action('swap', i, j));
   }
+
+  /**
+   * insert value at i into place j, shifting all between
+   * assumes j < i
+   * @param i - target value to be inserted into the jth place
+   * @param j - destination for the ith value
+   */
   insert (i: number, j: number): void {
+    if (j >= i) { throw new Error('j value must be less than i value'); }
     this.list = [
       ...this.list.slice(0, j),
       this.list[i],
@@ -71,10 +84,15 @@ export class List extends Subject<any> {
     ];
     this.mark(new Action('insert', i, j));
   }
+
+  /**
+   *
+   */
   put (i: number, v: any): void {
     this.list[i] = v;
     this.mark(new Assignment(i, v));
   }
+
   compare (i: number, j: number): number {
     this.mark(new Action('compare', i, j));
     return this.comparitor(this.list[i], this.list[j]);
@@ -82,6 +100,7 @@ export class List extends Subject<any> {
   gt (i: number, j: number): boolean { return this.compare(i, j) === +1; }
   lt (i: number, j: number): boolean { return this.compare(i, j) === -1; }
   eq (i: number, j: number): boolean { return this.compare(i, j) === 0; }
+
   get largest () {
     return this.list
       .reduce((t, c) => (this.comparitor(t, c) === +1 ? t : c), this.list[0]);

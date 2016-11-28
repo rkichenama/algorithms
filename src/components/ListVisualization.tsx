@@ -47,8 +47,7 @@ export class ListVisualization extends React.Component<ListVisualizationProps, L
             list.history()
               .forEach((action, i) => {
                 switch (true) {
-                  default:
-                    /*setTimeout(() => console.info(list.history()), 100 * (i + .5));*/ break;
+                  default: break;
                   case /insert/.test(action.type):
                   case /swap/.test(action.type):
                   case /assignment/.test(action.type):
@@ -116,7 +115,6 @@ export class ListVisualization extends React.Component<ListVisualizationProps, L
         {arr.map((_, i) => (
           <div key={i} style={{ height: this.doHeight(_) }}></div>
         ))}
-        <canvas></canvas>
       </div>
     );
   }
