@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { List } from '../collections/List';
+import { Loading } from './Loading';
 
 // http://sorting.at/
 // http://aarondufour.com/tools/visualizer/
@@ -24,6 +25,7 @@ export interface ListVisualizationState {
   list: any[];
 }
 
+@Loading('list')
 export class ListVisualization extends React.Component<ListVisualizationProps, ListVisualizationState> {
   public listView: any;
   private doHeight: Function;
