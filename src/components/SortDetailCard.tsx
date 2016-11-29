@@ -5,6 +5,7 @@ import { ListVisualization } from './ListVisualization';
 import { ListCanvas } from './ListCanvas';
 import { WikipediaService } from '../util/WikipediaService';
 import { Metadata } from '../util/Metadata';
+import { Tabs } from './Tabs';
 
 import * as hljs from 'highlight.js';
 
@@ -85,31 +86,33 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
       <article className='card sort-detail'>
         <div className='flexCol'>
           <heading>{this.props.algorithm}</heading>
-          <section className='flexRow'>
-            <pre><code className='no-grow typescript' ref={ d => this._code = d }>
-              {Metadata.source(this.props.algorithm)}
-            </code></pre>
-            <div className='wiki' ref={d => this._desc = d}>Description</div>
-          </section>
-          <section className='flexRow'>
-            <dl className='no-grow'>
-              <dt>Time (ms)</dt>
-              <dd ref={d => this._elapsed = d}></dd>
+          <Tabs>
+            <section className='flexRow' title='Visualization'>
+              <dl className='no-grow'>
+                <dt>Time (ms)</dt>
+                <dd ref={d => this._elapsed = d}></dd>
 
-              <dt>Swaps</dt>
-              <dd ref={d => this._swap = d}>-</dd>
+                <dt>Swaps</dt>
+                <dd ref={d => this._swap = d}>-</dd>
 
-              <dt>Inserts</dt>
-              <dd ref={d => this._insert = d}>-</dd>
+                <dt>Inserts</dt>
+                <dd ref={d => this._insert = d}>-</dd>
 
-              <dt>Shifts</dt>
-              <dd ref={d => this._moves = d}>-</dd>
+                <dt>Shifts</dt>
+                <dd ref={d => this._moves = d}>-</dd>
 
-              <dt>Comparisons</dt>
-              <dd ref={d => this._compare = d}>-</dd>
-            </dl>
-            <ListCanvas list={this.list} />
-          </section>
+                <dt>Comparisons</dt>
+                <dd ref={d => this._compare = d}>-</dd>
+              </dl>
+              <ListCanvas list={this.list} />
+            </section>
+            <section className='flexRow' title='Info'>
+              <pre><code className='no-grow typescript' ref={ d => this._code = d }>
+                {Metadata.source(this.props.algorithm)}
+              </code></pre>
+              <div className='wiki' ref={d => this._desc = d}>Description</div>
+            </section>
+          </Tabs>
         </div>
       </article>
     );

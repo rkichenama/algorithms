@@ -5,10 +5,9 @@
     box-sizing: border-box;
   }
 
-  section {
-    display: none;
-    padding: 20px 0 0;
-    border-top: 1px solid #ddd;
+  > article {
+    padding: .5rem;
+    border-top: 1px solid var(--clr-accent);
   }
 
   input {
@@ -21,7 +20,7 @@
     padding: 15px 25px;
     font-weight: var(--font-bold);
     text-align: center;
-    color: #bbb;
+    color: var(--clr-color);
     border: 1px solid transparent;
 
     &:before {
@@ -30,27 +29,18 @@
   }
 
 
-  label[for*='1']:before { content: '\f1cb'; }
-  label[for*='2']:before { content: '\f17d'; }
-  label[for*='3']:before { content: '\f16b'; }
-  label[for*='4']:before { content: '\f1a9'; }
+  label[for]:before { content: '☖'; }
 
   label:hover {
-    color: #888;
+    color: var(--clr-highlight);
     cursor: pointer;
   }
 
   input:checked + label {
-    color: #555;
-    border: 1px solid #ddd;
-    border-top: 2px solid orange;
-    border-bottom: 1px solid #fff;
-  }
+    color: var(--clr-important);
+    border: 1px solid var(--clr-accent);
+    border-top-width: 2px;
 
-  #tab1:checked ~ #content1,
-  #tab2:checked ~ #content2,
-  #tab3:checked ~ #content3,
-  #tab4:checked ~ #content4 {
-    display: block;
+    &:before { content: '☗'; }
   }
 }
