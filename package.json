@@ -4,7 +4,7 @@
   "description": "a playground for algorithms in javascript",
   "scripts": {
     "build": "webpack --display-error-details",
-    "dev": "webpack-dev-server --content-base dist/ --port 4000 --open",
+    "dev": "webpack-dev-server --inline --hot --content-base dist/ --port 4000 --open",
     "postinstall": "typings install && cp ./node_modules/react/dist/react.js ./dist/react.js && cp ./node_modules/react-dom/dist/react-dom.js ./dist/react-dom.js",
     "test": "jasmine-ts"
   },

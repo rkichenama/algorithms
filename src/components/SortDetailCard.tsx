@@ -30,9 +30,12 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
   private _moves: any;
   private _desc: any;
   private _code: any;
+  public _startTime: any;
+  public _elapsed: any;
 
   constructor (props: SortDetailProps) {
     super(props);
+    this._elapsed = 0;
   }
 
   componentDidMount () {
@@ -42,7 +45,8 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
         this._desc.innerHTML = json.text["*"];
         hljs.highlightBlock(this._code);
       });
-    setTimeout(() => sort[this.props.algorithm](), 1000);
+    this._startTime = new Date();
+    sort[this.props.algorithm]();
   }
 
   componentWillMount () { this.initList(); }
@@ -57,6 +61,12 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
       .filter(({type}) => /swap|insert|compare|assignment/.test(type))
       .distinctUntilChanged()
       .subscribe(this.calculate.bind(this));
+    this.list
+      .filter(({type}) => /complete/.test(type))
+      .subscribe(() => {
+        let now: any = new Date(), stupid = (now - this._startTime);
+        this._elapsed.innerText = stupid;
+      });
   }
 
   calculate (action: Action) {
@@ -94,6 +104,9 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
           </section>
           <section className='flexRow'>
             <dl className='no-grow'>
+              <dt>Time (ms)</dt>
+              <dd ref={d => this._elapsed = d}></dd>
+
               <dt>Swaps</dt>
               <dd ref={d => this._swap = d}>-</dd>
 

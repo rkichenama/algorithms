@@ -3,7 +3,7 @@
 - [ ] test
 - [ ] use tabs to differentiate the data for the sort algorithms
 - [ ] dynamically load the wiki article and the typescript for the sort
-- [ ] use `requestAnimationFrame` for animation
+- [x] use `requestAnimationFrame` for animation
 - [ ] enforce a responsive page layout
 - [ ] create the `Graph` and `DiGraph`
   - [ ] visualizations too

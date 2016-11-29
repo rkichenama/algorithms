@@ -19,8 +19,13 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
 
   componentDidMount () {
     this._initAnimation();
-    Observable.fromEvent(window, 'resize')
-      .subscribe(() => this.setCanvas());
+    Observable.merge(
+      Observable.fromEvent(window, 'resize'),
+      Observable.fromEvent(document, 'visibilitychange')
+    )
+      .subscribe(() => { this.setCanvas(); this.renderBars(); });
+    Observable.fromEvent(document, 'cssthemechange')
+      .subscribe(() => this.renderBars());
   }
   componentWillMount () {}
   componentDidUpdate (prevProps: any, prevState: any) { this._initAnimation(); }
@@ -30,8 +35,10 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
     this.renderBars();
     list
       .filter((action) => /swap|insert/.test(action.type))
-      .reduce((p, action: Action) => p.then(() => this[`_${action.type}`](action.src, action.dest)), Promise.resolve())
+      .reduce((p: Promise<any>, action: Action) => p.then(() => this[`_${action.type}`](action.src, action.dest)), Promise.resolve())
       .subscribe(() => {});
+    list
+      .finally(() => this.renderBars());
   }
 
   render () {

@@ -16,7 +16,10 @@
     <div id="j"></div>
     <div id="k"></div>
     <script>
-      window.setInterval( () => document.body.classList.toggle('dark'), 5 * 60 * 1000 );
+      window.setInterval( () => {
+        document.body.classList.toggle('dark');
+        document.dispatchEvent(new Event('cssthemechange'));
+      }, 5 * 60 * 1000 );
     </script>
   </body>
 
