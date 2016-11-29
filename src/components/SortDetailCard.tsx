@@ -2,6 +2,7 @@ import * as React from 'react';
 import { List, Action } from '../collections/List';
 import { ObservableSort } from '../algorithms/ObservableSort';
 import { ListVisualization } from './ListVisualization';
+import { ListCanvas } from './ListCanvas';
 import { WikipediaService } from '../util/WikipediaService';
 
 import * as hljs from 'highlight.js';
@@ -105,7 +106,7 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
               <dt>Comparisons</dt>
               <dd ref={d => this._compare = d}>-</dd>
             </dl>
-            <ListVisualization list={this.list} />
+            <ListCanvas list={this.list} />
           </section>
         </div>
       </article>

@@ -1,0 +1,12 @@
+.list-canvas {
+  &, & canvas {
+    position: relative;
+  }
+
+  canvas {
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+    transform: rotateX(180deg);
+  }
+}

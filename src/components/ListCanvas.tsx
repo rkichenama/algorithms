@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { List, Action } from '../collections/List';
 import { Loading } from './Loading';
+import { Observable } from 'rxjs/Rx';
 
-@Loading('actions')
-export class ListCanvas extends React.Component< { list: List, actions: any[] }, {} > {
+import './ListCanvas.scss';
+
+@Loading('list')
+export class ListCanvas extends React.Component< { list: List }, {} > {
   static steps: number;
 
   private canvas: any;
@@ -14,15 +17,20 @@ export class ListCanvas extends React.Component< { list: List, actions: any[] },
     if (!ListCanvas.steps) { ListCanvas.steps = 15; }
   }
 
-  componentDidMount () {}
+  componentDidMount () {
+    this._initAnimation();
+    Observable.fromEvent(window, 'resize')
+      .subscribe(() => this.setCanvas());
+  }
   componentWillMount () {}
-  componentDidUpdate (prevProps: any, prevState: any) {}
-  private _initAnimation (props = this.props) {
-    let { list } = props;
+  componentDidUpdate (prevProps: any, prevState: any) { this._initAnimation(); }
+  private _initAnimation ({ list } = this.props) {
     this.list = list.asArray();
+    this.setCanvas();
+    this.renderBars();
     list
       .filter((action) => /swap|insert/.test(action.type))
-      .reduce((p, action: Action) => p.then(() => this[action.type](action.src, action.dest)), Promise.resolve())
+      .reduce((p, action: Action) => p.then(() => this[`_${action.type}`](action.src, action.dest)), Promise.resolve())
       .subscribe(() => {});
   }
 
@@ -37,19 +45,15 @@ export class ListCanvas extends React.Component< { list: List, actions: any[] },
   private loop (stepFn: Function, completeFn: Function): Promise<any> {
     return new Promise((res) => {
       const fn = (step = 1) => {
-        if (step > ListCanvas.steps) {
+        if (document.hidden || step > ListCanvas.steps) {
           completeFn();
           this.renderBars();
           res();
           return;
         } else {
-          if (document.hidden) {
-            requestAnimationFrame(() => fn(ListCanvas.steps + 1));
-          } else {
-            stepFn(step / ListCanvas.steps);
-            this.renderBars();
-            requestAnimationFrame(() => fn(step + 1));
-          }
+          stepFn(step / ListCanvas.steps);
+          this.renderBars();
+          requestAnimationFrame(() => fn(step + 1));
         }
       };
       fn();
@@ -94,25 +98,29 @@ export class ListCanvas extends React.Component< { list: List, actions: any[] },
   }
 
   private setCanvas () {
-    let { canvas } = this, {height, width} = canvas.getBoundingClientRect();
-    canvas.setAttribute('width', width);
-    canvas.setAttribute('height', height);
+    let { canvas } = this,
+      { width } = canvas.getBoundingClientRect();
+    canvas.setAttribute('width', Math.max(width, (this.list.length || 10) * (2 + 2 + 4)));
+    canvas.setAttribute('height', 240);
   }
   private renderBars (list = this.list) {
-    let { canvas } = this, {height, width} = canvas.getBoundingClientRect();
-    let context = canvas.getContext('2d');
-    context.clearRect(0, 0, width, height);
-    list.forEach(this._renderBars(context, width, height, Math.max.apply(null, list)));
+    if (!document.hidden) {
+      let { canvas } = this,
+        width = parseInt(canvas.getAttribute('width'), 10),
+        height = parseInt(canvas.getAttribute('height'), 10);
+      let context = canvas.getContext('2d');
+      context.clearRect(0, 0, width, height);
+      list.forEach(this._renderBars(context, width, height, Math.max.apply(null, list)));
+    }
   }
   private _renderBars (context: any, width: number, height: number, max: number) {
     return (a, i, {length: cnt}) => {
       let w = width / cnt;
-      let tall = (height - 4)
-      let h = (a / max) * tall;
-      context.fillStyle = 'white';
-      context.fillRect(i * w + 1, (tall + 1) - h - 1, w - 2, h + 2)
-      context.fillStyle = 'blue';
-      context.fillRect(i * w + 2, (tall + 1) - h, w - 4, h);
+      let h = (a / 10000) * (height - 10);
+      context.fillStyle = getComputedStyle(document.body).getPropertyValue('--clr-highlight');
+      context.fillRect(i * w + 1, 0, w - 2, h + 2)
+      context.fillStyle = getComputedStyle(document.body).getPropertyValue('--clr-important');
+      context.fillRect(i * w + 2, 1, w - 4, h);
     }
   }
 }
