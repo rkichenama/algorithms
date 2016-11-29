@@ -47,7 +47,7 @@ export class ListCanvas extends React.Component< { list: any[], actions: any[] }
     });
   }
 
-  private _insert (i, j) {
+  private _insert (i: number, j: number): Promise<any> {
     // moving i into the j place, shifting the rest over to the right
     const list = this.list;
     const ths = list.slice(j, i + 1)
@@ -69,7 +69,7 @@ export class ListCanvas extends React.Component< { list: any[], actions: any[] }
         ].forEach((v, k) => list[k] = v)
     );
   }
-  private _swap (i, j) {
+  private _swap (i: number, j: number): Promise<any> {
     const list = this.list;
     const [ith, jth] = [list[i], list[j]];
     const steps = 7;
@@ -79,6 +79,9 @@ export class ListCanvas extends React.Component< { list: any[], actions: any[] }
       (mult) => [list[i], list[j]] = [ith + mult * di, jth + mult * dj].map(Math.floor),
       () => [list[i], list[j]] = [jth, ith]
     );
+  }
+  private _compare (i: number, j: number): Promise<any> {
+    return Promise.resolve();
   }
 
   private setCanvas () {
@@ -92,7 +95,7 @@ export class ListCanvas extends React.Component< { list: any[], actions: any[] }
     context.clearRect(0, 0, width, height);
     list.forEach(this._renderBars(context, width, height, Math.max.apply(null, list)));
   }
-  private _renderBars (context, width, height, max) {
+  private _renderBars (context: any, width: number, height: number, max: number) {
     return (a, i, {length: cnt}) => {
       let w = width / cnt;
       let tall = (height - 4)
