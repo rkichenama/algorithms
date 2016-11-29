@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { List } from '../collections/List';
+import { List, Action } from '../collections/List';
 import { Loading } from './Loading';
 
 @Loading('actions')
-export class ListCanvas extends React.Component< { list: any[], actions: any[] }, {} > {
+export class ListCanvas extends React.Component< { list: List, actions: any[] }, {} > {
   static steps: number;
 
   private canvas: any;
@@ -17,6 +17,15 @@ export class ListCanvas extends React.Component< { list: any[], actions: any[] }
   componentDidMount () {}
   componentWillMount () {}
   componentDidUpdate (prevProps: any, prevState: any) {}
+  private _initAnimation (props = this.props) {
+    let { list } = props;
+    this.list = list.asArray();
+    list
+      .filter((action) => /swap|insert/.test(action.type))
+      .reduce((p, action: Action) => p.then(() => this[action.type](action.src, action.dest)), Promise.resolve())
+      .subscribe(() => {});
+  }
+
   render () {
     return (
       <div className="list-canvas">
