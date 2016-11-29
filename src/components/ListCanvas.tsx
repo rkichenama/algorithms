@@ -5,12 +5,23 @@ import { Observable } from 'rxjs/Rx';
 
 import './ListCanvas.scss';
 
+interface BarColor {
+  bg: string;
+  fg: string;
+}
+
+const BarColorNormal: BarColor  = {bg: '--clr-important', fg: '--clr-highlight'};
+const BarColorSwap: BarColor    = {bg: '--clr-important', fg: '--clr-highlight'};
+const BarColorInsert: BarColor  = {bg: '--clr-important', fg: '--clr-highlight'};
+const BarColorCompare: BarColor = {bg: '--clr-important', fg: '--clr-highlight'};
+
 @Loading('list')
 export class ListCanvas extends React.Component< { list: List }, {} > {
   static steps: number;
 
   private canvas: any;
   private list: any[];
+  private colors: BarColor[];
 
   constructor (props: any, context: any) {
     super(props, context);
@@ -31,6 +42,7 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
   componentDidUpdate (prevProps: any, prevState: any) { this._initAnimation(); }
   private _initAnimation ({ list } = this.props) {
     this.list = list.asArray();
+    this.colors = this.list.map(() => BarColorNormal);
     this.setCanvas();
     this.renderBars();
     list
@@ -117,16 +129,16 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
         height = parseInt(canvas.getAttribute('height'), 10);
       let context = canvas.getContext('2d');
       context.clearRect(0, 0, width, height);
-      list.forEach(this._renderBars(context, width, height, Math.max.apply(null, list)));
+      list.forEach(this._renderBars(context, width, height, Math.max.apply(null, list), this.colors));
     }
   }
-  private _renderBars (context: any, width: number, height: number, max: number) {
+  private _renderBars (context: any, width: number, height: number, max: number, colors: BarColor[]) {
     return (a, i, {length: cnt}) => {
       let w = width / cnt;
       let h = (a / 10000) * (height - 10);
-      context.fillStyle = getComputedStyle(document.body).getPropertyValue('--clr-important');
+      context.fillStyle = getComputedStyle(document.body).getPropertyValue(colors[i].bg);
       context.fillRect(i * w + 1, 0, w - 2, h + 2)
-      context.fillStyle = getComputedStyle(document.body).getPropertyValue('--clr-highlight');
+      context.fillStyle = getComputedStyle(document.body).getPropertyValue(colors[i].fg);
       context.fillRect(i * w + 2, 1, w - 4, h);
     }
   }

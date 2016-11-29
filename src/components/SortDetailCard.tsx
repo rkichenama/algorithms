@@ -43,11 +43,13 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
   componentDidMount () {
     let { algorithm } = this.props;
     let sort = new ObservableSort(this.list);
-    (new WikipediaService()).pullID(Metadata.wiki(algorithm)) //Insertion Sort
+    (new WikipediaService()).pullID(Metadata.wiki(algorithm))
+      .catch((err) => ({text: {'*': ''}}))
       .then((json) => {
         this._desc.innerHTML = json.text["*"];
         hljs.highlightBlock(this._code);
-      });
+      })
+      .catch((err) => {});
     this._startTime = new Date();
     sort[algorithm]();
   }
