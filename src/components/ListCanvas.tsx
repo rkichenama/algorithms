@@ -14,7 +14,7 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
 
   constructor (props: any, context: any) {
     super(props, context);
-    if (!ListCanvas.steps) { ListCanvas.steps = 15; }
+    if (!ListCanvas.steps) { ListCanvas.steps = 8; }
   }
 
   componentDidMount () {
@@ -117,9 +117,9 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
     return (a, i, {length: cnt}) => {
       let w = width / cnt;
       let h = (a / 10000) * (height - 10);
-      context.fillStyle = getComputedStyle(document.body).getPropertyValue('--clr-highlight');
-      context.fillRect(i * w + 1, 0, w - 2, h + 2)
       context.fillStyle = getComputedStyle(document.body).getPropertyValue('--clr-important');
+      context.fillRect(i * w + 1, 0, w - 2, h + 2)
+      context.fillStyle = getComputedStyle(document.body).getPropertyValue('--clr-highlight');
       context.fillRect(i * w + 2, 1, w - 4, h);
     }
   }

@@ -73,7 +73,7 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
       <article className='card sort-detail'>
         <div className='flexCol'>
           <heading>{this.props.algorithm}</heading>
-          <section className='flexRow'>
+          <section className='flexRow hide'>
             <pre><code className='no-grow typescript' ref={ d => this._code = d }>
 {`insertion_sort (list: any[]): any[] {
   let clone = list.slice(0);

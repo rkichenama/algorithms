@@ -16,16 +16,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
     <SortDetailCard list={arr} algorithm={'insertion'} />,
     document.querySelector('#h')
   );
-  // ReactDOM.render(
-  //   <SortDetailCard list={arr} algorithm={'selection'} />,
-  //   document.querySelector('#i')
-  // );
-  // ReactDOM.render(
-  //   <SortDetailCard list={arr} algorithm={'shell'} />,
-  //   document.querySelector('#j')
-  // );
-  // ReactDOM.render(
-  //   <SortDetailCard list={arr} algorithm={'shell_swap'} />,
-  //   document.querySelector('#k')
-  // );
+  ReactDOM.render(
+    <SortDetailCard list={arr} algorithm={'selection'} />,
+    document.querySelector('#i')
+  );
+  ReactDOM.render(
+    <SortDetailCard list={arr} algorithm={'shell'} />,
+    document.querySelector('#j')
+  );
+  ReactDOM.render(
+    <SortDetailCard list={arr} algorithm={'shell_swap'} />,
+    document.querySelector('#k')
+  );
 });
