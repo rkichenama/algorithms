@@ -11,9 +11,9 @@ interface BarColor {
 }
 
 const BarColorNormal: BarColor  = {bg: '--clr-important', fg: '--clr-highlight'};
-const BarColorSwap: BarColor    = {bg: '--clr-important', fg: '--clr-highlight'};
-const BarColorInsert: BarColor  = {bg: '--clr-important', fg: '--clr-highlight'};
-const BarColorCompare: BarColor = {bg: '--clr-important', fg: '--clr-highlight'};
+const BarColorSwap: BarColor    = {bg: '--clr-important', fg: '--clr-accent'};
+const BarColorInsert: BarColor  = {bg: '--clr-highlight', fg: '--clr-important'};
+const BarColorCompare: BarColor = {bg: '--clr-black', fg: '--clr-white'};
 
 @Loading('list')
 export class ListCanvas extends React.Component< { list: List }, {} > {
@@ -56,7 +56,7 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
     this.renderBars();
     this.subscriptions = [].concat(
       list
-        .filter((action) => /swap|insert/.test(action.type))
+        .filter((action) => /swap|insert|compare/.test(action.type))
         .reduce((p: Promise<any>, action: Action) => p.then(() => this[`_${action.type}`](action.src, action.dest)), Promise.resolve())
         .subscribe(() => {}),
       list
@@ -91,8 +91,8 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
   }
 
   private _insert (i: number, j: number): Promise<any> {
-    // moving i into the j place, shifting the rest over to the right∏
-    const list = this.list;
+    // moving i into the j place, shifting the rest over to the right
+    const list = this.list, colors = this.colors;
     const ths = list.slice(j, i + 1);
     const steps = 15;
     const deltas = ths
@@ -102,6 +102,7 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
       (mult) => {
         for (let k = 0; k < ths.length; k++) {
           list[k + j] = Math.floor(ths[k] + mult * deltas[k]);
+          colors[k + j] = BarColorInsert;
         }
       },
       () => [
@@ -109,22 +110,35 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
           ths[ths.length - 1],
           ...ths.slice(0, ths.length - 1),
           ...list.slice(i + 1)
-        ].forEach((v, k) => list[k] = v)
+        ].forEach((v, k) => {
+          list[k] = v;
+          colors[k] = BarColorNormal;
+        })
     );
   }
   private _swap (i: number, j: number): Promise<any> {
-    const list = this.list;
+    const list = this.list, colors = this.colors;
     const [ith, jth] = [list[i], list[j]];
     const steps = 7;
     const [di, dj] = [jth - list[i], ith - list[j]];
 
     return this.loop(
-      (mult) => [list[i], list[j]] = [ith + mult * di, jth + mult * dj].map(Math.floor),
-      () => [list[i], list[j]] = [jth, ith]
+      (mult) => {
+        [list[i], list[j]] = [ith + mult * di, jth + mult * dj].map(Math.floor);
+        [colors[i], colors[j]] = [BarColorSwap, BarColorSwap];
+      },
+      () => {
+        [list[i], list[j]] = [jth, ith];
+        [colors[i], colors[j]] = [BarColorNormal, BarColorNormal];
+      }
     );
   }
   private _compare (i: number, j: number): Promise<any> {
-    return Promise.resolve();
+    const list = this.list, colors = this.colors;
+    return this.loop(
+      (mult) => [colors[i], colors[j]] = [BarColorCompare, BarColorCompare],
+      () => [colors[i], colors[j]] = [BarColorNormal, BarColorNormal]
+    );
   }
 
   private setCanvas () {
@@ -140,13 +154,14 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
         height = parseInt(canvas.getAttribute('height'), 10);
       let context = canvas.getContext('2d');
       context.clearRect(0, 0, width, height);
-      list.forEach(this._renderBars(context, width, height, Math.max.apply(null, list), this.colors));
+      list.forEach(this._renderBars(context, width, height, 10000));
     }
   }
-  private _renderBars (context: any, width: number, height: number, max: number, colors: BarColor[]) {
+  private _renderBars (context: any, width: number, height: number, max: number) {
+    const colors = this.colors;
     return (a, i, {length: cnt}) => {
       let w = width / cnt;
-      let h = (a / 10000) * (height - 10);
+      let h = (a / max) * (height - 10);
       context.fillStyle = getComputedStyle(document.body).getPropertyValue(colors[i].bg);
       context.fillRect(i * w + 1, 0, w - 2, h + 2);
       context.fillStyle = getComputedStyle(document.body).getPropertyValue(colors[i].fg);
