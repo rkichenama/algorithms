@@ -55,7 +55,7 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
 
   render () {
     return (
-      <div className="list-canvas">
+      <div className='list-canvas'>
         <canvas ref={d => this.canvas = d}></canvas>
       </div>
     );
@@ -80,16 +80,16 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
   }
 
   private _insert (i: number, j: number): Promise<any> {
-    // moving i into the j place, shifting the rest over to the right
+    // moving i into the j place, shifting the rest over to the right∏
     const list = this.list;
-    const ths = list.slice(j, i + 1)
+    const ths = list.slice(j, i + 1);
     const steps = 15;
     const deltas = ths
-      .map((v, k) => ths[k === 0 ? (ths.length - 1): k - 1] - v);
+      .map((v, k) => ths[k === 0 ? (ths.length - 1) : k - 1] - v);
 
     return this.loop(
       (mult) => {
-        for(let k = 0; k < ths.length; k++) {
+        for (let k = 0; k < ths.length; k++) {
           list[k + j] = Math.floor(ths[k] + mult * deltas[k]);
         }
       },
@@ -137,9 +137,9 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
       let w = width / cnt;
       let h = (a / 10000) * (height - 10);
       context.fillStyle = getComputedStyle(document.body).getPropertyValue(colors[i].bg);
-      context.fillRect(i * w + 1, 0, w - 2, h + 2)
+      context.fillRect(i * w + 1, 0, w - 2, h + 2);
       context.fillStyle = getComputedStyle(document.body).getPropertyValue(colors[i].fg);
       context.fillRect(i * w + 2, 1, w - 4, h);
-    }
+    };
   }
 }

@@ -44,7 +44,7 @@ export class ObservableSort {
   }
 
   selection (): void {
-    let clone = this.list
+    let clone = this.list;
     for (let i = 0; i < clone.length; i++) {
       let j = i;
       for (let k = (i + 1); k < clone.length; k++)

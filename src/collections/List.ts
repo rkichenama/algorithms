@@ -64,7 +64,7 @@ export class List extends Subject<any> {
    *
    */
   swap (i: number, j: number): void {
-    [this.list[i], this.list[j]] = [this.list[j], this.list[i]]
+    [this.list[i], this.list[j]] = [this.list[j], this.list[i]];
     this.mark(new Action('swap', i, j));
   }
 

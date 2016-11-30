@@ -12,7 +12,7 @@ export class Sort {
   static shell (list: any[]): any[] {
     let clone = [...list];
     let h = 1, n = clone.length;
-    while (h < (n/3)) { h = 3 * h + 1; }
+    while (h < (n / 3)) { h = 3 * h + 1; }
     while (h > 0) {
       h = Math.floor(2 * h / 3);
       for (let k = h; k < n; k++)
