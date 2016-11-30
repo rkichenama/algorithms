@@ -6,6 +6,7 @@ import { ListCanvas } from './ListCanvas';
 import { WikipediaService } from '../util/WikipediaService';
 import { Metadata } from '../util/Metadata';
 import { Tabs } from './Tabs';
+import { CodeBlock } from './CodeBlock';
 
 import * as hljs from 'highlight.js';
 
@@ -84,13 +85,14 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
   }
 
   render () {
+    const { algorithm } = this.props;
     return (
       <article className='card sort-detail'>
         <div className='flexCol'>
           <heading>{this.props.algorithm}</heading>
           <Tabs>
             <section className='flexRow' title='Visualization'>
-              <dl className='no-grow'>
+              <dl className='no-grow col-xs-4'>
                 <dt>Time (ms)</dt>
                 <dd ref={d => this._elapsed = d}></dd>
 
@@ -103,15 +105,13 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
                 <dt>Shifts</dt>
                 <dd ref={d => this._moves = d}>-</dd>
 
-                <dt>Comparisons</dt>
+                <dt>Compares</dt>
                 <dd ref={d => this._compare = d}>-</dd>
               </dl>
               <ListCanvas list={this.list} />
             </section>
-            <section className='flexRow' title='Info'>
-              <pre><code className='no-grow typescript' ref={ d => this._code = d }>
-                {Metadata.source(this.props.algorithm)}
-              </code></pre>
+            <CodeBlock {...{algorithm}} title='Typescript' />
+            <section className='flexRow' title='Wiki'>
               <div className='wiki' ref={d => this._desc = d}>Description</div>
             </section>
           </Tabs>

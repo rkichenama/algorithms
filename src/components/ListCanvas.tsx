@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { List, Action } from '../collections/List';
 import { Loading } from './Loading';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subscriber } from 'rxjs/Rx';
 
 import './ListCanvas.scss';
 
@@ -22,6 +22,8 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
   private canvas: any;
   private list: any[];
   private colors: BarColor[];
+  private subscriptions: Subscriber<any>[];
+  private isUnmounting: boolean;
 
   constructor (props: any, context: any) {
     super(props, context);
@@ -29,28 +31,37 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
   }
 
   componentDidMount () {
+    this.isUnmounting = false;
     this._initAnimation();
-    Observable.merge(
-      Observable.fromEvent(window, 'resize'),
-      Observable.fromEvent(document, 'visibilitychange')
-    )
-      .subscribe(() => { this.setCanvas(); this.renderBars(); });
-    Observable.fromEvent(document, 'cssthemechange')
-      .subscribe(() => this.renderBars());
+    this.subscriptions = [].concat(
+      this.subscriptions,
+      Observable.merge(
+        Observable.fromEvent(window, 'resize'),
+        Observable.fromEvent(document, 'visibilitychange')
+      )
+        .subscribe(() => { this.setCanvas(); this.renderBars(); }),
+      Observable.fromEvent(document, 'cssthemechange')
+        .subscribe(() => this.renderBars()),
+    );
   }
-  componentWillMount () {}
+  componentWillUnmount () {
+    this.isUnmounting = true;
+    this.subscriptions.forEach((s: Subscriber<any>) => s.unsubscribe());
+  }
   componentDidUpdate (prevProps: any, prevState: any) { this._initAnimation(); }
   private _initAnimation ({ list } = this.props) {
     this.list = list.asArray();
     this.colors = this.list.map(() => BarColorNormal);
     this.setCanvas();
     this.renderBars();
-    list
-      .filter((action) => /swap|insert/.test(action.type))
-      .reduce((p: Promise<any>, action: Action) => p.then(() => this[`_${action.type}`](action.src, action.dest)), Promise.resolve())
-      .subscribe(() => {});
-    list
-      .finally(() => this.renderBars());
+    this.subscriptions = [].concat(
+      list
+        .filter((action) => /swap|insert/.test(action.type))
+        .reduce((p: Promise<any>, action: Action) => p.then(() => this[`_${action.type}`](action.src, action.dest)), Promise.resolve())
+        .subscribe(() => {}),
+      list
+        .finally(() => this.renderBars()),
+    );
   }
 
   render () {
@@ -123,7 +134,7 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
     canvas.setAttribute('height', 240);
   }
   private renderBars (list = this.list) {
-    if (!document.hidden) {
+    if (!(document.hidden || this.isUnmounting)) {
       let { canvas } = this,
         width = parseInt(canvas.getAttribute('width'), 10),
         height = parseInt(canvas.getAttribute('height'), 10);
