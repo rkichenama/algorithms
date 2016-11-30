@@ -1,7 +1,5 @@
 ## Customize the test machine
 machine:
-  timezone:
-    America/New_York
   node:
     version: 7.0.0
 dependencies:
