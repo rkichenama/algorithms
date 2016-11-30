@@ -78,6 +78,9 @@ export class ListCanvas extends React.Component< { algorithm: string, list: List
         }), Promise.resolve())
         .subscribe(() => {}),
       list
+        .filter((action) => /swap|insert|compare/.test(action.type))
+        .subscribe(this._calculate.bind(this)),
+      list
         .filter(({type}) => /complete/.test(type))
         .subscribe(() => {
           let now: any = new Date(), stupid = (now - this._startTime);
@@ -95,10 +98,10 @@ export class ListCanvas extends React.Component< { algorithm: string, list: List
   private _calculate (action: Action) {
     const key = `${/assignment/.test(action.type) ? 'i' : action.type[0]}`;
     ++this.counts[key];
-    // this[`_${/assignment/.test(action.type) ? 'insert' : action.type}`].innerText = ++this.counts[key];
+    this[`_${/assignment/.test(action.type) ? 'insert' : action.type}`].innerText = ++this.counts[key];
     if (/insert/.test(action.type)) {
       this.counts.m += (action.src - action.dest);
-      // this._moves.innerText = Math.ceil(this.counts.m  / this.counts.i);
+      this._moves.innerText = Math.ceil(this.counts.m  / this.counts.i);
     }
   }
 
