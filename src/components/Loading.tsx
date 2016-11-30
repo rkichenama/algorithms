@@ -3,8 +3,8 @@ import * as React from 'react';
 import './Loading.scss';
 
 const LoadingAnimation = () => (
-  <div className="loading-wrapper">
-    <div className="loading"></div>
+  <div className='loading-wrapper'>
+    <div className='loading'></div>
   </div>
 );
 

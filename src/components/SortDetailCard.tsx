@@ -10,8 +10,8 @@ import { CodeBlock } from './CodeBlock';
 
 import * as hljs from 'highlight.js';
 
-require("highlight.js/styles/github-gist.css");
-import "./SortDetailCard.scss";
+require('highlight.js/styles/github-gist.css');
+import './SortDetailCard.scss';
 
 export interface SortDetailProps {
   list: any[];
@@ -47,7 +47,7 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
     (new WikipediaService()).pullID(Metadata.wiki(algorithm))
       .catch((err) => ({text: {'*': ''}}))
       .then((json) => {
-        this._desc.innerHTML = json.text["*"];
+        this._desc.innerHTML = json.text['*'];
         hljs.highlightBlock(this._code);
       })
       .catch((err) => {});
@@ -76,7 +76,7 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
   }
 
   calculate (action: Action) {
-    const key = `${/assignment/.test(action.type) ? 'i': action.type[0]}`;
+    const key = `${/assignment/.test(action.type) ? 'i' : action.type[0]}`;
     this[`_${/assignment/.test(action.type) ? 'insert' : action.type}`].innerText = ++this.counts[key];
     if (/insert/.test(action.type)) {
       this.counts.m += (action.src - action.dest);

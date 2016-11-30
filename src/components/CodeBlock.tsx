@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as hljs from 'highlight.js';
 import { Metadata } from '../util/Metadata';
 
-require("highlight.js/styles/github-gist.css");
+require('highlight.js/styles/github-gist.css');
 
 interface CodeBlockProps {
   algorithm: string;

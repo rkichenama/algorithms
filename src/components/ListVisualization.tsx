@@ -15,7 +15,7 @@ import { Loading } from './Loading';
 
  */
 
-import "./ListVisualization.scss";
+import './ListVisualization.scss';
 
 export interface ListVisualizationProps {
   list: List;
@@ -55,7 +55,7 @@ export class ListVisualization extends React.Component<ListVisualizationProps, L
                     setTimeout(() => this[action.type](action), 100 * (i + .5)); break;
                 }
                 setTimeout(() => this.clearColors(), 100 * (i + .8));
-              })
+              });
           }
         )
     );
@@ -65,7 +65,7 @@ export class ListVisualization extends React.Component<ListVisualizationProps, L
     const view = this.listView;
     view.querySelectorAll('div').forEach(i => {
       i.classList.remove('insert', 'swap', 'compare');
-    })
+    });
   }
 
   compare ({src, dest}) {

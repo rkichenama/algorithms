@@ -13,10 +13,10 @@ export class Tabs extends React.Component<{}, {selected: number}> {
   render () {
     const [{ selected }, unq] = [this.state, this.unq];
     return (
-      <article className="card tab-container">
+      <article className='card tab-container'>
         {
           React.Children.map(this.props.children, (child: any, i) => [
-            <input id={`${unq}_tab${i}`} type="radio" name={`${unq}_tabs`} value={i} checked={selected === i} onChange={ (evt) => this.setState({selected: parseInt(evt.target.value, 10)})}/>,
+            <input id={`${unq}_tab${i}`} type='radio' name={`${unq}_tabs`} value={i} checked={selected === i} onChange={ (evt) => this.setState({selected: parseInt(evt.target.value, 10)})}/>,
             <label htmlFor={`${unq}_tab${i}`}>{(!!child.props.title && child.props.title) || 'Tab'}</label>
           ])
         }
