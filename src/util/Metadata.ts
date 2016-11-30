@@ -13,7 +13,7 @@ export const Metadata = new (class {
       merge: 20039,
     };
     this._srcs = {
-      insertion: `insertion_sort (list: any[]): any[] {
+      insertion: `function insertion_sort (list: any[]): any[] {
   let clone = list.slice(0);
   for (let i = 1; i < clone.length; i++) {
     let k = i;
@@ -27,7 +27,7 @@ export const Metadata = new (class {
   }
   return clone;
 }`,
-      selection: `selection (list: any[]): any[] {
+      selection: `function selection (list: any[]): any[] {
   let clone = list.slice(0);
   for (let i = 0; i < clone.length; i++) {
     let j = i;
@@ -38,7 +38,7 @@ export const Metadata = new (class {
   }
   return clone;
 }`,
-      shell: `shell (list: any[]): any[] {
+      shell: `function shell (list: any[]): any[] {
   let clone = [...list];
   let h = 1, n = clone.length;
   while (h < (n/3)) { h = 3 * h + 1; }
@@ -50,7 +50,7 @@ export const Metadata = new (class {
   }
   return clone;
 }`,
-      shell_swap: `shell (list: any[]): any[] {
+      shell_swap: `function shell (list: any[]): any[] {
   let clone = [...list];
   let h = 1, n = clone.length;
   while (h < (n/3)) { h = 3 * h + 1; }

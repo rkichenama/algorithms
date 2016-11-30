@@ -1,17 +1,9 @@
-@import "../css/mixins";
+@import '../css/mixins';
 
 .sort-detail {
   heading {
     text-transform: capitalize;
     text-align: center;
-  }
-
-  .wiki {
-    position: relative;
-    .infobox, .tright {
-      float: right;
-      z-index: 5;
-    }
   }
 
   code, dl {
