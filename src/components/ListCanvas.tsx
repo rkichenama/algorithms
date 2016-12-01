@@ -2,6 +2,7 @@ import * as React from 'react';
 import { List, Action } from '../collections/List';
 import { Loading } from './Loading';
 import { Observable, Subscriber } from 'rxjs/Rx';
+import { ObservableSort } from '../algorithms/ObservableSort';
 
 import './ListCanvas.scss';
 
@@ -16,7 +17,7 @@ const BarColorInsert: BarColor  = {bg: '--clr-highlight', fg: '--clr-important'}
 const BarColorCompare: BarColor = {bg: '--clr-black', fg: '--clr-white'};
 
 @Loading('list')
-export class ListCanvas extends React.Component< { list: List }, {} > {
+export class ListCanvas extends React.Component< { algorithm: string, list: any[], max: number }, {} > {
   static steps: number;
 
   private canvas: any;
@@ -25,6 +26,17 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
   private subscriptions: Subscriber<any>[];
   private isUnmounting: boolean;
 
+  private counts: any;
+  private __swap: any;
+  private __insert: any;
+  private __compare: any;
+  private _moves: any;
+  private _desc: any;
+  private _code: any;
+  public _startTime: any;
+  public _elapsed: any;
+
+
   constructor (props: any, context: any) {
     super(props, context);
     if (!ListCanvas.steps) { ListCanvas.steps = 8; }
@@ -32,9 +44,7 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
 
   componentDidMount () {
     this.isUnmounting = false;
-    this._initAnimation();
     this.subscriptions = [].concat(
-      this.subscriptions,
       Observable.merge(
         Observable.fromEvent(window, 'resize'),
         Observable.fromEvent(document, 'visibilitychange')
@@ -43,31 +53,80 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
       Observable.fromEvent(document, 'cssthemechange')
         .subscribe(() => this.renderBars()),
     );
+    this._initAnimation();
   }
   componentWillUnmount () {
     this.isUnmounting = true;
     this.subscriptions.forEach((s: Subscriber<any>) => s.unsubscribe());
   }
   componentDidUpdate (prevProps: any, prevState: any) { this._initAnimation(); }
-  private _initAnimation ({ list } = this.props) {
-    this.list = list.asArray();
+  private _initAnimation ({ list: l, algorithm } = this.props) {
+    const list = new List(l);
+    this.list = [...l];
     this.colors = this.list.map(() => BarColorNormal);
+    this.counts = {
+      s: 0, i: 0, c: 0, m: 0
+    };
     this.setCanvas();
     this.renderBars();
     this.subscriptions = [].concat(
+      this.subscriptions,
       list
         .filter((action) => /swap|insert|compare/.test(action.type))
-        .reduce((p: Promise<any>, action: Action) => p.then(() => this[`_${action.type}`](action.src, action.dest)), Promise.resolve())
+        .reduce((p: Promise<any>, action: Action) => p.then(() => (
+          this[`_${action.type}`](action.src, action.dest)
+        )), Promise.resolve())
         .subscribe(() => {}),
+      list
+        .filter((action) => /swap|insert|compare/.test(action.type))
+        .subscribe(this._calculate.bind(this)),
+      list
+        .filter(({type}) => /complete/.test(type))
+        .subscribe(() => {
+          let now: any = new Date(), stupid = (now - this._startTime);
+          this._elapsed.innerText = stupid;
+        }),
       list
         .finally(() => this.renderBars()),
     );
+
+    let sort = new ObservableSort(list);
+    this._startTime = new Date();
+    sort[algorithm]();
+  }
+
+  private _calculate (action: Action) {
+    const key = `${/assignment/.test(action.type) ? 'i' : action.type[0]}`;
+    ++this.counts[key];
+    this[`__${/assignment/.test(action.type) ? 'insert' : action.type}`].innerText = ++this.counts[key];
+    if (/insert/.test(action.type)) {
+      this.counts.m += (action.src - action.dest);
+      this._moves.innerText = Math.ceil(this.counts.m  / this.counts.i);
+    }
   }
 
   render () {
     return (
-      <div className='list-canvas'>
-        <canvas ref={d => this.canvas = d}></canvas>
+      <div className='flexRow list-visualization'>
+        <dl className='no-grow col-xs-4'>
+          <dt>Time (ms)</dt>
+          <dd ref={d => this._elapsed = d}>-</dd>
+
+          <dt>Swaps</dt>
+          <dd ref={d => this.__swap = d}>-</dd>
+
+          <dt>Inserts</dt>
+          <dd ref={d => this.__insert = d}>-</dd>
+
+          <dt>Shifts</dt>
+          <dd ref={d => this._moves = d}>-</dd>
+
+          <dt>Compares</dt>
+          <dd ref={d => this.__compare = d}>-</dd>
+        </dl>
+        <div className='list-canvas'>
+          <canvas ref={d => this.canvas = d}></canvas>
+        </div>
       </div>
     );
   }
@@ -144,8 +203,9 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
   private setCanvas () {
     let { canvas } = this,
       { width } = canvas.getBoundingClientRect();
-    canvas.setAttribute('width', Math.max(width, (this.list.length || 10) * (2 + 2 + 4)));
-    canvas.setAttribute('height', 240);
+    width = Math.max(width, this.list.length * (2 + 2 + 2));
+    canvas.setAttribute('width', width);
+    canvas.setAttribute('height', Math.min(240, width * 9 / 16));
   }
   private renderBars (list = this.list) {
     if (!(document.hidden || this.isUnmounting)) {
@@ -154,10 +214,10 @@ export class ListCanvas extends React.Component< { list: List }, {} > {
         height = parseInt(canvas.getAttribute('height'), 10);
       let context = canvas.getContext('2d');
       context.clearRect(0, 0, width, height);
-      list.forEach(this._renderBars(context, width, height, 10000));
+      list.forEach(this._renderBars(context, width, height));
     }
   }
-  private _renderBars (context: any, width: number, height: number, max: number) {
+  private _renderBars (context: any, width: number, height: number, max: number = this.props.max) {
     const colors = this.colors;
     return (a, i, {length: cnt}) => {
       let w = width / cnt;

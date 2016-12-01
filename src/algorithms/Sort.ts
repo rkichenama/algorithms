@@ -88,48 +88,4 @@ export class Sort {
     order(list, clone, 0, list.length - 1);
     return list;
   }
-
-  static _insertion (list: any[], s = 1): void {
-    let n = list.length;
-    for (let i = s; i < n; i++) {
-      for (let k = i; k > 0 && (list[k] < list[k - 1]); k--)
-        [list[k - 1], list[k]] = [list[k], list[k - 1]];
-    }
-  }
-
-  static _bubble (list: any[]): any[] {
-    let n = list.length;
-    for (let i = 0; i < n; i++) {
-      for (let k = (n - 1); k > i; k--)
-        if (list[k] < list[k - 1])
-          [list[k - 1], list[k]] = [list[k], list[k - 1]];
-    }
-    return list;
-  }
-
-  static _selection (list: any[]): any[] {
-    let n = list.length;
-    for (let i = 0; i < n; i++) {
-      let j = i;
-      for (let k = (i + 1); k < n; k++)
-        if (list[k] < list[j])
-          j = k;
-      [list[i], list[j]] = [list[j], list[i]];
-    }
-    return list;
-  }
 };
-/*
-const list = [701, 301, 132, 57, 23, 10, 4, 1];
-[
-    Sort.quick(list),
-    Sort.shell(list),
-    Sort.insertion(list),
-    Sort.bubble(list),
-    Sort.selection(list)
-]
-    .forEach(arr => {
-        arr.forEach(i => document.write(`${i}<br/>`));
-        document.write('<hr />');
-    });
-*/

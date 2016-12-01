@@ -93,7 +93,7 @@ a {
 
 .card {
   display: block;
-  margin: 0 .5rem;
+  margin: .5rem;
   padding: .5rem;
   border-radius: 4px;
   background-color: var(--clr-white);
@@ -105,6 +105,11 @@ a {
   &[right] {
     text-align: right;
   }
+}
+
+heading {
+  display: block;
+  margin: 4px 0;
 }
 
 /* bootstrap overrides */
