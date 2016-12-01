@@ -27,9 +27,9 @@ export class ListCanvas extends React.Component< { algorithm: string, list: List
   private isUnmounting: boolean;
 
   private counts: any;
-  private _swap: any;
-  private _insert: any;
-  private _compare: any;
+  private __swap: any;
+  private __insert: any;
+  private __compare: any;
   private _moves: any;
   private _desc: any;
   private _code: any;
@@ -42,7 +42,7 @@ export class ListCanvas extends React.Component< { algorithm: string, list: List
     if (!ListCanvas.steps) { ListCanvas.steps = 8; }
   }
 
-  componentDidMount () {
+  componentDidMount () {console.log('mounting');
     this.isUnmounting = false;
     this.subscriptions = [].concat(
       Observable.merge(
@@ -55,7 +55,7 @@ export class ListCanvas extends React.Component< { algorithm: string, list: List
     );
     this._initAnimation();
   }
-  componentWillUnmount () {
+  componentWillUnmount () {console.log('unmounting');
     this.isUnmounting = true;
     this.subscriptions.forEach((s: Subscriber<any>) => s.unsubscribe());
   }
@@ -72,10 +72,9 @@ export class ListCanvas extends React.Component< { algorithm: string, list: List
       this.subscriptions,
       list
         .filter((action) => /swap|insert|compare/.test(action.type))
-        .reduce((p: Promise<any>, action: Action) => p.then(() => {
-          this[action.type](action.src, action.dest);
-          this._calculate(action);
-        }), Promise.resolve())
+        .reduce((p: Promise<any>, action: Action) => p.then(() => (
+          this[`_${action.type}`](action.src, action.dest)
+        )), Promise.resolve())
         .subscribe(() => {}),
       list
         .filter((action) => /swap|insert|compare/.test(action.type))
@@ -98,7 +97,7 @@ export class ListCanvas extends React.Component< { algorithm: string, list: List
   private _calculate (action: Action) {
     const key = `${/assignment/.test(action.type) ? 'i' : action.type[0]}`;
     ++this.counts[key];
-    this[`_${/assignment/.test(action.type) ? 'insert' : action.type}`].innerText = ++this.counts[key];
+    this[`__${/assignment/.test(action.type) ? 'insert' : action.type}`].innerText = ++this.counts[key];
     if (/insert/.test(action.type)) {
       this.counts.m += (action.src - action.dest);
       this._moves.innerText = Math.ceil(this.counts.m  / this.counts.i);
@@ -110,19 +109,19 @@ export class ListCanvas extends React.Component< { algorithm: string, list: List
       <div className='flexRow list-visualization'>
         <dl className='no-grow col-xs-4'>
           <dt>Time (ms)</dt>
-          <dd ref={d => this._elapsed = d}></dd>
+          <dd ref={d => this._elapsed = d}>-</dd>
 
           <dt>Swaps</dt>
-          <dd ref={d => this._swap = d}>-</dd>
+          <dd ref={d => this.__swap = d}>-</dd>
 
           <dt>Inserts</dt>
-          <dd ref={d => this._insert = d}>-</dd>
+          <dd ref={d => this.__insert = d}>-</dd>
 
           <dt>Shifts</dt>
           <dd ref={d => this._moves = d}>-</dd>
 
           <dt>Compares</dt>
-          <dd ref={d => this._compare = d}>-</dd>
+          <dd ref={d => this.__compare = d}>-</dd>
         </dl>
         <div className='list-canvas'>
           <canvas ref={d => this.canvas = d}></canvas>
@@ -149,7 +148,7 @@ export class ListCanvas extends React.Component< { algorithm: string, list: List
     });
   }
 
-  private insert (i: number, j: number): Promise<any> {
+  private _insert (i: number, j: number): Promise<any> {
     // moving i into the j place, shifting the rest over to the right
     const list = this.list, colors = this.colors;
     const ths = list.slice(j, i + 1);
@@ -175,7 +174,7 @@ export class ListCanvas extends React.Component< { algorithm: string, list: List
         })
     );
   }
-  private swap (i: number, j: number): Promise<any> {
+  private _swap (i: number, j: number): Promise<any> {
     const list = this.list, colors = this.colors;
     const [ith, jth] = [list[i], list[j]];
     const steps = 7;
@@ -192,7 +191,7 @@ export class ListCanvas extends React.Component< { algorithm: string, list: List
       }
     );
   }
-  private compare (i: number, j: number): Promise<any> {
+  private _compare (i: number, j: number): Promise<any> {
     const list = this.list, colors = this.colors;
     return this.loop(
       (mult) => [colors[i], colors[j]] = [BarColorCompare, BarColorCompare],
