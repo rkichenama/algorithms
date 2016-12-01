@@ -8,7 +8,7 @@ const SortDetailDeck: React.StatelessComponent<{ count: number }> = ({ count = 5
 
   return (
     <article className='sort-detail-deck'>
-      <div className="flexRow"  style={{flexWrap: "wrap"}}>
+      <div className='flexRow'  style={{flexWrap: 'wrap'}}>
         <SortDetailCard {...{max}} list={arr} algorithm={'insertion'} className='flexCol' />
         <SortDetailCard {...{max}} list={arr} algorithm={'selection'} className='flexCol' />
         <SortDetailCard {...{max}} list={arr} algorithm={'shell'} className='flexCol' />
