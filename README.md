@@ -1,4 +1,4 @@
-# Algorithms in Javascript
+# Algorithms in Javascript [![Codacy Badge](https://api.codacy.com/project/badge/Grade/bfbd711d4a174d17938b99b56e41faad)](https://www.codacy.com/app/rkichenama/algorithms?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=rkichenama/algorithms&amp;utm_campaign=Badge_Grade)
 
 es6 modules and syntax
 
