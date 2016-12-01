@@ -1,4 +1,5 @@
-var webpackConfig = require('./webpack.config.js');
+var webpackConfig = require('./webpack.config.test.js');
+var path = require('path');
 
 module.exports = function(config) {
   config.set({
@@ -11,56 +12,65 @@ module.exports = function(config) {
     frameworks: ['jasmine'],
 
     // list of files / patterns to load in the browser
+    // files: [
+    //   // // support libraries
+    //   // 'dist/react.js',
+    //   // 'dist/react-dom.js',
+    //   // // source files
+    //   // 'src/**/*.{ts,tsx}',
+    //   // test specs
+    //   'spec/**/*_[Ss]pec.{ts,tsx}'
+    // ],
+
     files: [
-      // // support libraries
-      // 'dist/react.js',
-      // 'dist/react-dom.js',
-      // // source files
-      // 'src/**/*.{ts,tsx}',
-      // test specs
-      'spec/**/*_[Ss]pec.{ts,tsx}'
+        'spec/testing.js'
     ],
-
-
+    // preprocessors: {
+    //     'spec/testing.js': 'webpack'
+    // },
+    preprocessors: {
+      'testing.js': [
+        'webpack',
+        'sourcemap',
+        'sourcemap-writer', // important!
+        'coverage'          // important!
+      ]
+    },
     // list of files to exclude
     exclude: [
     ],
 
-    webpack: {
-      devtool: 'eval-source-map',
-      debug: true,
-      module: webpackConfig.module,
-      resolve: webpackConfig.resolve
-    },
-
-    webpackMiddleware: {
-      quiet: true,
-      stats: {
-        colors: true
-      }
+    webpack: webpackConfig,
+    webpackServer: {
+      noInfo: true
     },
 
 
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-      'spec/**/*_[Ss]pec.{ts,tsx}': ['webpack', 'coverage'],
-      // 'src/**/*.{ts,tsx}': ['webpack', 'coverage'],
-    },
-
+    // preprocessors: {
+    //   'spec/**/*_[Ss]pec.{ts,tsx}': ['webpack'],
+    //   'src/**/*.{ts,tsx}': ['coverage'],
+    // },
+    //
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['spec', 'coverage'],
 
-    coverageReporter: {
-      includeAllSources: true,
-      reporters: [
-        { type: 'text' },
-        { type: 'lcov', dir: 'coverage', subdir: '.', },
-      ],
-    },
+    // coverageReporter: {
+    //   includeAllSources: true,
+    //   reporters: [
+    //     { type: 'text' },
+    //     { type: 'lcov', dir: 'coverage', subdir: '.', },
+    //   ],
+    // },
+    coverageReporter: { // important!
+          type: 'json',
+          subdir: '.',
+          file: 'coverage-final.json'
+        },
 
     specReporter: {
       maxLogLines: 5,
@@ -78,7 +88,7 @@ module.exports = function(config) {
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_ERROR,
+    logLevel: config.LOG_INFO,
 
 
     // enable / disable watching file and executing tests whenever any file changes
@@ -87,9 +97,10 @@ module.exports = function(config) {
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: [
-      'PhantomJS',
+      // 'PhantomJS',
       // 'Firefox',
-      // 'Chrome', 'ChromeCanary',
+      'Chrome',
+      // 'ChromeCanary',
       // 'Safari',
     ],
 
