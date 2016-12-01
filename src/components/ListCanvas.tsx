@@ -17,7 +17,7 @@ const BarColorInsert: BarColor  = {bg: '--clr-highlight', fg: '--clr-important'}
 const BarColorCompare: BarColor = {bg: '--clr-black', fg: '--clr-white'};
 
 @Loading('list')
-export class ListCanvas extends React.Component< { algorithm: string, list: List }, {} > {
+export class ListCanvas extends React.Component< { algorithm: string, list: any[], max: number }, {} > {
   static steps: number;
 
   private canvas: any;
@@ -42,7 +42,7 @@ export class ListCanvas extends React.Component< { algorithm: string, list: List
     if (!ListCanvas.steps) { ListCanvas.steps = 8; }
   }
 
-  componentDidMount () {console.log('mounting');
+  componentDidMount () {
     this.isUnmounting = false;
     this.subscriptions = [].concat(
       Observable.merge(
@@ -55,13 +55,14 @@ export class ListCanvas extends React.Component< { algorithm: string, list: List
     );
     this._initAnimation();
   }
-  componentWillUnmount () {console.log('unmounting');
+  componentWillUnmount () {
     this.isUnmounting = true;
     this.subscriptions.forEach((s: Subscriber<any>) => s.unsubscribe());
   }
   componentDidUpdate (prevProps: any, prevState: any) { this._initAnimation(); }
-  private _initAnimation ({ list, algorithm } = this.props) {
-    this.list = list.asArray();
+  private _initAnimation ({ list: l, algorithm } = this.props) {
+    const list = new List(l);
+    this.list = [...l];
     this.colors = this.list.map(() => BarColorNormal);
     this.counts = {
       s: 0, i: 0, c: 0, m: 0
@@ -202,8 +203,9 @@ export class ListCanvas extends React.Component< { algorithm: string, list: List
   private setCanvas () {
     let { canvas } = this,
       { width } = canvas.getBoundingClientRect();
-    canvas.setAttribute('width', Math.max(width, (this.list.length || 10) * (2 + 2 + 4)));
-    canvas.setAttribute('height', 240);
+    width = Math.max(width, this.list.length * (2 + 2 + 2));
+    canvas.setAttribute('width', width);
+    canvas.setAttribute('height', Math.min(240, width * 9 / 16));
   }
   private renderBars (list = this.list) {
     if (!(document.hidden || this.isUnmounting)) {
@@ -212,10 +214,10 @@ export class ListCanvas extends React.Component< { algorithm: string, list: List
         height = parseInt(canvas.getAttribute('height'), 10);
       let context = canvas.getContext('2d');
       context.clearRect(0, 0, width, height);
-      list.forEach(this._renderBars(context, width, height, 10000));
+      list.forEach(this._renderBars(context, width, height));
     }
   }
-  private _renderBars (context: any, width: number, height: number, max: number) {
+  private _renderBars (context: any, width: number, height: number, max: number = this.props.max) {
     const colors = this.colors;
     return (a, i, {length: cnt}) => {
       let w = width / cnt;

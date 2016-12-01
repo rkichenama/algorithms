@@ -17,7 +17,7 @@ const ThemeSwitcher: React.StatelessComponent<{ themes: string[] }> = ({ themes 
         <div className='btn-toolbar pull-right' role='toolbar'>
           <div className='btn-group btn-group-xs' role='group' onClick={themer}>
             {
-              themes.map((theme) => (
+              themes.sort().map((theme) => (
                 <button key={theme} type='button' className='btn btn-default text-capitalize' title={theme}>{theme}</button>
               ))
             }
