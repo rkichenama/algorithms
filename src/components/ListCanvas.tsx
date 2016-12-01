@@ -89,7 +89,7 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
   private _initAnimation ({ list: l, algorithm } = this.props) {
     const list = new List(l);
     this.list = [...l];
-    this.steps = ((l.length >=250) ? 2 : ((l.length >= 100) ? 4 : 8));
+    this.steps = ((l.length >= 250) ? 2 : ((l.length >= 100) ? 4 : 8));
     this.colors = this.list.map(() => BarColorNormal);
     this.counts = {
       s: 0, i: 0, c: 0, m: 0
