@@ -3,7 +3,7 @@ import './css/site.scss';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import ThemeSwitcher from './components/ThemeSwitcher';
-import SortDetailDeck from './components/SortDetailDeck';
+import SortDetail from './components/SortDetail';
 
 require('./index.html');
 
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     document.querySelector('heading')
   );
   ReactDOM.render(
-    <SortDetailDeck count={250} />,
+    <SortDetail />,
     document.querySelector('#sort-algorithms')
   );
 });

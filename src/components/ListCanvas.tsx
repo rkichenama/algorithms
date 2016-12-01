@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { List, Action } from '../collections/List';
-import { Loading } from './Loading';
 import { Observable, Subscriber } from 'rxjs/Rx';
 import { ObservableSort } from '../algorithms/ObservableSort';
 
@@ -16,9 +15,8 @@ const BarColorSwap: BarColor    = {bg: '--clr-important', fg: '--clr-accent'};
 const BarColorInsert: BarColor  = {bg: '--clr-highlight', fg: '--clr-important'};
 const BarColorCompare: BarColor = {bg: '--clr-black', fg: '--clr-white'};
 
-@Loading('list')
 export class ListCanvas extends React.Component< { algorithm: string, list: any[], max: number }, {} > {
-  static steps: number;
+  private steps: number;
 
   private canvas: any;
   private list: any[];
@@ -39,11 +37,15 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
 
   constructor (props: any, context: any) {
     super(props, context);
-    if (!ListCanvas.steps) { ListCanvas.steps = 8; }
+    this.subscriptions = [];
   }
 
-  componentDidMount () {
-    this.isUnmounting = false;
+  private killSubs () {
+    this.isUnmounting = true;
+    this.subscriptions.forEach((s: Subscriber<any>) => s.unsubscribe());
+  }
+  private resetSubscriptions (list: List) {
+    this.killSubs();
     this.subscriptions = [].concat(
       Observable.merge(
         Observable.fromEvent(window, 'resize'),
@@ -52,29 +54,10 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
         .subscribe(() => { this.setCanvas(); this.renderBars(); }),
       Observable.fromEvent(document, 'cssthemechange')
         .subscribe(() => this.renderBars()),
-    );
-    this._initAnimation();
-  }
-  componentWillUnmount () {
-    this.isUnmounting = true;
-    this.subscriptions.forEach((s: Subscriber<any>) => s.unsubscribe());
-  }
-  componentDidUpdate (prevProps: any, prevState: any) { this._initAnimation(); }
-  private _initAnimation ({ list: l, algorithm } = this.props) {
-    const list = new List(l);
-    this.list = [...l];
-    this.colors = this.list.map(() => BarColorNormal);
-    this.counts = {
-      s: 0, i: 0, c: 0, m: 0
-    };
-    this.setCanvas();
-    this.renderBars();
-    this.subscriptions = [].concat(
-      this.subscriptions,
       list
-        .filter((action) => /swap|insert|compare/.test(action.type))
+        .filter((action) => /swap|insert/.test(action.type))
         .reduce((p: Promise<any>, action: Action) => p.then(() => (
-          this[`_${action.type}`](action.src, action.dest)
+          !this.isUnmounting && this[`_${action.type}`](action.src, action.dest)
         )), Promise.resolve())
         .subscribe(() => {}),
       list
@@ -89,6 +72,33 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
       list
         .finally(() => this.renderBars()),
     );
+    this.isUnmounting = false;
+  }
+
+  componentDidMount () {
+    this.isUnmounting = false;
+    this._initAnimation();
+  }
+  componentWillUnmount () {
+    this.killSubs();
+  }
+  componentWillRecieveProps () {
+    this.killSubs();
+  }
+  componentDidUpdate (prevProps: any, prevState: any) { this._initAnimation(); }
+  private _initAnimation ({ list: l, algorithm } = this.props) {
+    const list = new List(l);
+    this.list = [...l];
+    this.steps = ((l.length >=250) ? 2 : ((l.length >= 100) ? 4 : 8));
+    this.colors = this.list.map(() => BarColorNormal);
+    this.counts = {
+      s: 0, i: 0, c: 0, m: 0
+    };
+
+    this.resetSubscriptions(list);
+
+    this.setCanvas();
+    this.renderBars();
 
     let sort = new ObservableSort(list);
     this._startTime = new Date();
@@ -134,13 +144,13 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
   private loop (stepFn: Function, completeFn: Function): Promise<any> {
     return new Promise((res) => {
       const fn = (step = 1) => {
-        if (document.hidden || step > ListCanvas.steps) {
+        if (document.hidden || step > this.steps) {
           completeFn();
           this.renderBars();
           res();
           return;
         } else {
-          stepFn(step / ListCanvas.steps);
+          stepFn(step / this.steps);
           this.renderBars();
           requestAnimationFrame(() => fn(step + 1));
         }
