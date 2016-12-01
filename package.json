@@ -5,12 +5,11 @@
   "scripts": {
     "build": "webpack --display-error-details",
     "dev": "webpack-dev-server --inline --hot --content-base dist/ --port 4000 --open",
-    "install": "yarn install",
     "postinstall": "typings install && cp ./node_modules/react/dist/react.js ./dist/react.js && cp ./node_modules/react-dom/dist/react-dom.js ./dist/react-dom.js",
     "test": "jasmine-ts",
     "posttest": "npm run lint",
     "lint": "tslint ./src/**/*.{ts,tsx}",
-    "coverage": "istanbul cover jasmine-node --captureExceptions spec/ && cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage && rm -rf ./coverage",
+    "coverage": "istanbul cover ./node_modules/jasmine-ts/index.js && cat ./coverage/lcov.info | codacy-coverage"
   },
   "repository": {
     "type": "git",
