@@ -18,7 +18,7 @@ const BarColorCompare: BarColor = {bg: '--clr-black', fg: '--clr-white'};
 
 @Loading('list')
 export class ListCanvas extends React.Component< { algorithm: string, list: any[], max: number }, {} > {
-  static steps: number;
+  private steps: number;
 
   private canvas: any;
   private list: any[];
@@ -39,7 +39,6 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
 
   constructor (props: any, context: any) {
     super(props, context);
-    if (!ListCanvas.steps) { ListCanvas.steps = 8; }
   }
 
   componentDidMount () {
@@ -61,8 +60,9 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
   }
   componentDidUpdate (prevProps: any, prevState: any) { this._initAnimation(); }
   private _initAnimation ({ list: l, algorithm } = this.props) {
-    const list = new List(l);
+    const list = new List(l), { length: count } = l;
     this.list = [...l];
+    this.steps = ((count >= 250) ? 2 : ((count >= 100) ? 4 : 8));
     this.colors = this.list.map(() => BarColorNormal);
     this.counts = {
       s: 0, i: 0, c: 0, m: 0
@@ -72,7 +72,7 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
     this.subscriptions = [].concat(
       this.subscriptions,
       list
-        .filter((action) => /swap|insert|compare/.test(action.type))
+        .filter((action) => /swap|insert/.test(action.type))
         .reduce((p: Promise<any>, action: Action) => p.then(() => (
           this[`_${action.type}`](action.src, action.dest)
         )), Promise.resolve())
@@ -131,16 +131,16 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
     );
   }
 
-  private loop (stepFn: Function, completeFn: Function): Promise<any> {
+  private loop (stepFn: Function, completeFn: Function, currStep: number = 1): Promise<any> {
     return new Promise((res) => {
-      const fn = (step = 1) => {
-        if (document.hidden || step > ListCanvas.steps) {
+      const fn = (step = currStep) => {
+        if (document.hidden || step > this.steps) {
           completeFn();
           this.renderBars();
           res();
           return;
         } else {
-          stepFn(step / ListCanvas.steps);
+          stepFn(step / this.steps);
           this.renderBars();
           requestAnimationFrame(() => fn(step + 1));
         }
@@ -196,7 +196,8 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
     const list = this.list, colors = this.colors;
     return this.loop(
       (mult) => [colors[i], colors[j]] = [BarColorCompare, BarColorCompare],
-      () => [colors[i], colors[j]] = [BarColorNormal, BarColorNormal]
+      () => [colors[i], colors[j]] = [BarColorNormal, BarColorNormal],
+      this.steps - 1
     );
   }
 

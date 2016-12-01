@@ -9,7 +9,8 @@
     "test": "jasmine-ts",
     "posttest": "npm run lint",
     "lint": "tslint ./src/**/*.{ts,tsx}",
-    "coverage": "istanbul cover ./node_modules/jasmine-ts/index.js && cat ./coverage/lcov.info | codacy-coverage",
+    "precoverage": "npm run karma",
+    "coverage": "cat ./coverage/lcov.info | codacy-coverage",
     "karma": "karma start karma.conf.js"
   },
   "repository": {
@@ -45,9 +46,11 @@
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.0.2",
     "karma-phantomjs-launcher": "^1.0.2",
+    "karma-phantomjs-shim": "^1.4.0",
     "karma-spec-reporter": "^0.0.26",
     "karma-typescript": "^2.1.4",
     "karma-typescript-preprocessor": "^0.3.0",
+    "karma-webpack": "^1.8.0",
     "markdown-loader": "^0.1.7",
     "node-sass": "3.13.0",
     "react": "^15.3.2",

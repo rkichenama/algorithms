@@ -8,7 +8,6 @@ dependencies:
     - yarn install
 test:
   override:
-    - npm test
     - npm run coverage
 general:
   artifacts:
