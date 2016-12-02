@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { List, Action } from '../collections/List';
+import { List, Action, Assignment } from '../collections/List';
 import { Observable, Subscriber } from 'rxjs/Rx';
 import { ObservableSort } from '../algorithms/ObservableSort';
 
@@ -55,13 +55,13 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
       Observable.fromEvent(document, 'cssthemechange')
         .subscribe(() => this.renderBars()),
       list
-        .filter((action) => /swap|insert/.test(action.type))
+        .filter((action) => /swap|insert|assignment/.test(action.type))
         .reduce((p: Promise<any>, action: Action) => p.then(() => (
-          !this.isUnmounting && this[`_${action.type}`](action.src, action.dest)
+          !this.isUnmounting && this[`_${action.type}`](action)
         )), Promise.resolve())
         .subscribe(() => {}),
       list
-        .filter((action) => /swap|insert|compare/.test(action.type))
+        .filter((action) => /swap|insert|compare|assignment/.test(action.type))
         .subscribe(this._calculate.bind(this)),
       list
         .filter(({type}) => /complete/.test(type))
@@ -82,7 +82,7 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
   componentWillUnmount () {
     this.killSubs();
   }
-  componentWillRecieveProps () {
+  componentWillReceiveProps () {
     this.killSubs();
   }
   componentDidUpdate (prevProps: any, prevState: any) { this._initAnimation(); }
@@ -159,7 +159,24 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
     });
   }
 
-  private _insert (i: number, j: number): Promise<any> {
+  private _assignment ({src, value}: Assignment): Promise<any> {
+    const list = this.list, colors = this.colors;
+    const ith = list[src];
+    const di = value - list[src];
+
+    return this.loop(
+      (mult) => {
+        list[src] = Math.floor(ith + mult * di);
+        colors[src] = BarColorSwap;
+      },
+      () => {
+        list[src] = value;
+        colors[src] = BarColorNormal;
+      }
+    );
+  }
+
+  private _insert ({src: i, dest: j}: Action): Promise<any> {
     // moving i into the j place, shifting the rest over to the right
     const list = this.list, colors = this.colors;
     const ths = list.slice(j, i + 1);
@@ -185,10 +202,9 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
         })
     );
   }
-  private _swap (i: number, j: number): Promise<any> {
+  private _swap ({src: i, dest: j}: Action): Promise<any> {
     const list = this.list, colors = this.colors;
     const [ith, jth] = [list[i], list[j]];
-    const steps = 7;
     const [di, dj] = [jth - list[i], ith - list[j]];
 
     return this.loop(
@@ -202,7 +218,7 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
       }
     );
   }
-  private _compare (i: number, j: number): Promise<any> {
+  private _compare ({src: i, dest: j}: Action): Promise<any> {
     const list = this.list, colors = this.colors;
     return this.loop(
       (mult) => [colors[i], colors[j]] = [BarColorCompare, BarColorCompare],

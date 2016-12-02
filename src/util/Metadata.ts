@@ -62,9 +62,45 @@ export const Metadata = new (class {
   }
   return clone;
 }`,
-      bubble: ``,
-      quick: ``,
-      merge: ``,
+      bubble: `function bubble (list: any[]): any[] {
+  let clone = list.slice(0);
+  for (let i = 0; i < clone.length; i++) {
+    for (let k = (clone.length - 1); k > i; k--)
+      if (clone[k] < clone[k - 1])
+        [clone[k - 1], clone[k]] = [clone[k], clone[k - 1]];
+  }
+  return clone;
+}`,
+      quick: `function `,
+      merge: `function merge (list: any[]): any[] {
+  const
+    meld = (list, clone, lo, mid, hi) => {
+      for (let k = lo; k <= hi; k++)
+        clone[k] = list[k];
+
+      for (let k = lo, i = lo, j = mid + 1; k <= hi; k++)
+        switch (true) {
+          case (i > mid): list[k] = clone[j++]; break;
+          case (j > hi): list[k] = clone[i++]; break;
+          case (clone[j] < clone[i]): list[k] = clone[j++]; break;
+          default: list[k] = clone[i++]; break;
+        }
+    },
+    order = (list, clone, lo, hi) => {
+      if (hi <= lo) { return; }
+      let mid = Math.floor(lo + (hi - lo) / 2);
+
+      order(list, clone, lo, mid);
+      order(list, clone, mid + 1, hi);
+
+      meld(list, clone, lo, mid, hi);
+    }
+  ;
+
+  let clone = [...list];
+  order(list, clone, 0, list.length - 1);
+  return list;
+}`,
     };
   }
 

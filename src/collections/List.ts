@@ -100,6 +100,8 @@ export class List extends Subject<any> {
   gt (i: number, j: number): boolean { return this.compare(i, j) === +1; }
   lt (i: number, j: number): boolean { return this.compare(i, j) === -1; }
   eq (i: number, j: number): boolean { return this.compare(i, j) === 0; }
+  gte (i: number, j: number): boolean { return this.gt(i, j) || this.eq(i, j); }
+  lte (i: number, j: number): boolean { return this.lt(i, j) || this.eq(i, j); }
 
   get largest () {
     return this.list

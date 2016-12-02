@@ -34,7 +34,6 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
 
   render () {
     const { className, style } = this.props;
-    console.log(this.state.list.length);
     return (
       <article className={`${className} card sort-detail`} style={style}>
         <heading>{this.props.algorithm}</heading>
