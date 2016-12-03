@@ -5,6 +5,17 @@ export class ObservableSort {
 
   constructor (private list: List) { }
 
+  quick (): void {
+    // let [x = [], ...xs]: any[];
+    // if (x.length === 0) return [];
+    let moved = this.list.cut(0);
+    // return [
+    //   ...this.quick(xs.filter((y) => (y <= x))),
+    //   x,
+    //   ...this.quick(xs.filter((y) => (y > x)))
+    // ];
+  }
+
   shell (): void {
     let clone = this.list;
     let h = 1, n = clone.length;

@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { SortDetailCard } from './SortDetailCard';
+import { Loading } from './Loading';
 
-const SortDetailDeck: React.StatelessComponent<{ count: number }> = ({ count = 50 }) => {
-  const arr = [], max = 10000;
+const SortDetailDeck: React.StatelessComponent<{ count: number, max: number }> = ({ count, max }) => {
+  const arr = [];
   for (let i = 0; i < count; i++)
     arr[i] = Math.floor(Math.random() * max) + 1;
-
+/*
+*/
   return (
     <article className='sort-detail-deck'>
       <div className='flexRow'  style={{flexWrap: 'wrap'}}>
@@ -19,4 +21,4 @@ const SortDetailDeck: React.StatelessComponent<{ count: number }> = ({ count = 5
   );
 };
 
-export default SortDetailDeck;
+export default Loading('count')(SortDetailDeck);

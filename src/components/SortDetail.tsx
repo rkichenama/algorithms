@@ -1,6 +1,22 @@
 import * as React from 'react';
 import SortDetailDeck from './SortDetailDeck';
 
+import './SortDetail.scss';
+
+const Spinner: React.StatelessComponent<{obj: Object, aspect: string, lo: number, hi: number, fn: Function}> = ({obj, aspect, lo, hi, fn}) => (
+  <div className='input-group spinner'>
+    <input type='text' className='form-control' value={obj[aspect]} onChange={ (evt) => fn(aspect, Math.min(hi, Math.max(lo, parseInt(evt.target.value, 10)))) } />
+    <div className='input-group-btn-vertical'>
+      <button className='btn btn-default' type='button' onClick={ (evt) => fn(aspect, Math.min(hi, obj[aspect] + 1)) }>
+        <i className='glyphicon glyphicon-triangle-top'></i>
+      </button>
+      <button className='btn btn-default' type='button' onClick={ (evt) => fn(aspect, Math.max(lo, obj[aspect] - 1)) }>
+        <i className='glyphicon glyphicon-triangle-bottom'></i>
+      </button>
+    </div>
+  </div>
+);
+
 interface SortDetailState {
   count: number;
   max: number;
@@ -21,10 +37,10 @@ class SortDetailMenu extends React.Component<{ count: number, max: number, cb: F
   }
   render () {
     return (
-      <heading>
+      <heading className='sorts-heading'>
         <article className='col-xs-4 pull-right'>
-          <input type='range' min='20' max='300' value={this.state.count} onChange={ (evt) => this.changeCount('count', parseInt(evt.target.value, 10)) } />
-          <input type='range' min='1000' max='50000' value={this.state.max} onChange={ (evt) => this.changeCount('max', parseInt(evt.target.value, 10)) } />
+          <Spinner obj={this.state} aspect={'count'} lo={20} hi={300} fn={ this.changeCount.bind(this) } />
+          <Spinner obj={this.state} aspect={'max'} lo={1000} hi={50000} fn={ this.changeCount.bind(this) } />
           <div className='btn-toolbar pull-right' role='toolbar'>
             <div className='btn-group' role='group' onClick={ () => this.props.cb(this.state) }>
               <button className='btn btn-default'>Set</button>
@@ -47,10 +63,14 @@ export default class SortDetail extends React.Component<{}, SortDetailState> {
     };
   }
 
+  private changeState (state) {
+    this.setState({count: null, max: 0}, () => setTimeout(() => this.setState(state), 2000));
+  }
+
   render () {
     return (
       <div className='flexCol'>
-        <SortDetailMenu {...this.state} cb={(state: SortDetailState) => this.setState(state) } />
+        <SortDetailMenu {...this.state} cb={(state: SortDetailState) => this.changeState(state) } />
         <SortDetailDeck {...this.state} />
       </div>
     );

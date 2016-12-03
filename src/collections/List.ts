@@ -61,6 +61,28 @@ export class List extends Subject<any> {
   }
 
   /**
+   * move all < to left og, > to right of, specified index value
+   */
+  cut (i: number): number {
+    this.mark(new Action('compare', i, i));
+    let list = [...this.list];
+    let newI = i;
+    let left = list.filter((y) => (y <= list[i])),
+      right = list.filter((y) => (y > list[i]));
+    [...list] = [...left, list[i], ...right];
+    this.list = list.map((v, j) => {
+      if (v !== this.list[j]) {
+        this.mark(new Assignment(j, v));
+      }
+      if (v === this.list[i]) {
+        newI = j;
+      }
+      return v;
+    });
+    return newI;
+  }
+
+  /**
    *
    */
   swap (i: number, j: number): void {

@@ -56,9 +56,9 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
         .subscribe(() => this.renderBars()),
       list
         .filter((action) => /swap|insert|assignment/.test(action.type))
-        .reduce((p: Promise<any>, action: Action) => p.then(() => (
-          !this.isUnmounting && this[`_${action.type}`](action)
-        )), Promise.resolve())
+        .scan((p: Promise<any>, action: Action) => p.then(() => (
+          this[`_${action.type}`](action)
+        ).catch(() => {/* catch any rejections */})), Promise.resolve())
         .subscribe(() => {}),
       list
         .filter((action) => /swap|insert|compare|assignment/.test(action.type))
@@ -142,8 +142,10 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
   }
 
   private loop (stepFn: Function, completeFn: Function): Promise<any> {
-    return new Promise((res) => {
+    return new Promise((res, rej) => {
+      if (this.isUnmounting) { rej(); }
       const fn = (step = 1) => {
+        if (this.isUnmounting) { rej(); }
         if (document.hidden || step > this.steps) {
           completeFn();
           this.renderBars();
