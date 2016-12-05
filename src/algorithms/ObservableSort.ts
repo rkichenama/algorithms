@@ -6,14 +6,14 @@ export class ObservableSort {
   constructor (private list: List) { }
 
   quick (): void {
-    // let [x = [], ...xs]: any[];
-    // if (x.length === 0) return [];
-    let moved = this.list.cut(0);
-    // return [
-    //   ...this.quick(xs.filter((y) => (y <= x))),
-    //   x,
-    //   ...this.quick(xs.filter((y) => (y > x)))
-    // ];
+    const sort = ({lo, hi}) => {
+      if (hi <= 0 || hi === lo || hi - lo <= 0) { return; }
+      let moved = this.list.cut(lo, hi);
+      sort(moved.left);
+      sort(moved.right);
+    };
+    sort({lo: 0, hi: this.list.length - 1});
+    this.list.complete();
   }
 
   shell (): void {

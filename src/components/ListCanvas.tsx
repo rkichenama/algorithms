@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { List, Action, Assignment } from '../collections/List';
+import { List, Action, Assignment, Partition } from '../collections/List';
 import { Observable, Subscriber } from 'rxjs/Rx';
 import { ObservableSort } from '../algorithms/ObservableSort';
 
@@ -55,13 +55,13 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
       Observable.fromEvent(document, 'cssthemechange')
         .subscribe(() => this.renderBars()),
       list
-        .filter((action) => /swap|insert|assignment/.test(action.type))
+        .filter((action) => /swap|insert|assignment|partition/.test(action.type))
         .scan((p: Promise<any>, action: Action) => p.then(() => (
           this[`_${action.type}`](action)
         ).catch(() => {/* catch any rejections */})), Promise.resolve())
         .subscribe(() => {}),
       list
-        .filter((action) => /swap|insert|compare|assignment/.test(action.type))
+        .filter((action) => /swap|insert|compare|assignment|partition/.test(action.type))
         .subscribe(this._calculate.bind(this)),
       list
         .filter(({type}) => /complete/.test(type))
@@ -106,9 +106,9 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
   }
 
   private _calculate (action: Action) {
-    const key = `${/assignment/.test(action.type) ? 'i' : action.type[0]}`;
+    const key = `${/assignment|partition/.test(action.type) ? 'i' : action.type[0]}`;
     ++this.counts[key];
-    this[`__${/assignment/.test(action.type) ? 'insert' : action.type}`].innerText = ++this.counts[key];
+    this[`__${/assignment|partition/.test(action.type) ? 'insert' : action.type}`].innerText = ++this.counts[key];
     if (/insert/.test(action.type)) {
       this.counts.m += (action.src - action.dest);
       this._moves.innerText = Math.ceil(this.counts.m  / this.counts.i);
@@ -174,6 +174,27 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
       () => {
         list[src] = value;
         colors[src] = BarColorNormal;
+      }
+    );
+  }
+
+  private _partition ({targets, values}: Partition): Promise<any> {
+    const list = this.list, colors = this.colors;
+    const iths = targets.map((t) => list[t]);
+    const di = targets.map((t, i) => (values[i] - list[t]));
+
+    return this.loop(
+      (mult) => {
+        targets.forEach((t, i) => {
+          list[t] = Math.floor(iths[i] + mult * di[i]);
+          colors[t] = BarColorSwap;
+        });
+      },
+      () => {
+        targets.forEach((t, i) => {
+          list[t] = values[i];
+          colors[t] = BarColorNormal;
+        });
       }
     );
   }

@@ -16,6 +16,12 @@ export class Assignment extends Action {
   }
 }
 
+export class Partition extends Action {
+  constructor (public targets: number[], public values: any[]) {
+    super('partition', 0, 0);
+  }
+}
+
 export class List extends Subject<any> {
   private list: any[];
   private actions: Action[];
@@ -63,23 +69,35 @@ export class List extends Subject<any> {
   /**
    * move all < to left og, > to right of, specified index value
    */
-  cut (i: number): number {
+  cut (lo: number = 0, hi: number = (this.list.length - 1), i: number = lo): any {
     this.mark(new Action('compare', i, i));
     let list = [...this.list];
     let newI = i;
-    let left = list.filter((y) => (y <= list[i])),
-      right = list.filter((y) => (y > list[i]));
-    [...list] = [...left, list[i], ...right];
-    this.list = list.map((v, j) => {
-      if (v !== this.list[j]) {
-        this.mark(new Assignment(j, v));
-      }
-      if (v === this.list[i]) {
-        newI = j;
-      }
-      return v;
-    });
-    return newI;
+    let left = list.filter((y, j) => ((j >= lo && j <= hi) && (y < list[i]))),
+      mid  = list.filter((y, j) => ((j >= lo && j <= hi) && (y === list[i]))),
+      right = list.filter((y, j ) => ((j >= lo && j <= hi) && (y > list[i])));
+    let changed = [
+      ...left,
+      ...mid,
+      ...right,
+    ];
+    this.list = [
+      ...list.slice(0, lo),
+      ...changed,
+      ...list.slice(hi + 1),
+    ];
+    let [lLo, lHi, mLo, mHi, rLo, rHi] = [
+      lo, lo + (left.length - 1),
+      (lo + left.length), (lo + left.length + mid.length - 1),
+      (lo + left.length + mid.length), (lo + left.length + mid.length + right.length - 1),
+    ];
+
+    this.mark(new Partition(changed.map((v, j) => lLo + j), changed));
+
+    return {
+      left: {lo, hi: (lo + left.length - 1)},
+      right: {lo: (lo + left.length + mid.length), hi: (lo + left.length + mid.length + right.length - 1)},
+    };
   }
 
   /**
