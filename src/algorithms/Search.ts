@@ -14,3 +14,12 @@ export class Search {
   static depth (): void {}
   static breadth (): void {}
 }
+/*
+Store the root node in Container
+While (there are nodes in Container)
+   N = Get the "next" node from Container
+   Store all the children of N in Container
+   Do some work on N
+ For depth first use a stack. (The recursive implementation uses the call-stack...)
+ For breadth-first use a queue.
+*/
