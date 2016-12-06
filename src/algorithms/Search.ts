@@ -7,12 +7,31 @@ export class Search {
   }
   static binary (list: any[], target: any): number {
     const search = (lo: number, hi: number): number => {
-      return -1;
+      let i = Math.floor((hi + lo) / 2);
+      switch (true) {
+        case (hi === lo && lo === 0) || i >= list.length:
+        default: return -1;
+        case list[i] > target: return search(lo, i);
+        case list[i] < target: return search(i, hi + 1);
+        case list[i] === target: return i;
+      }
     };
     return search(0, list.length);
   }
-  static depth (): void {}
-  static breadth (): void {}
+  static depth (nodes: any[], target: any): any[] {
+    const container = [...nodes];
+    while (container.length) {
+      let node = container.shift();
+      node.children().forEach((n) => container.unshift(n));
+      if (node.value === target) {
+        return [];
+      }
+    }
+    return [];
+  }
+  static breadth (nodes: any[], trarget: any): any[] {
+    return [];
+  }
 }
 /*
 Store the root node in Container

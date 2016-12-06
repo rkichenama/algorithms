@@ -47,13 +47,14 @@ export class ObservableSort {
         for (let k = lo; k <= hi; k++)
           clone.put(k, list.item(k));
 
-        for (let k = lo, i = lo, j = mid + 1; k <= hi; k++)
+        for (let k = lo, i = lo, j = mid + 1; k <= hi; k++) {
           switch (true) {
             case (i > mid): list.put(k, clone.item(j++)); break;
             case (j > hi): list.put(k, clone.item(i++)); break;
             case (clone.lt(j, i)): list.lt(j, i); list.put(k, clone.item(j++)); break;
             default: list.lt(j, i); list.put(k, clone.item(i++)); break;
           }
+        }
       },
       order = (list, clone, lo, hi) => {
         if (hi <= lo) { return; }

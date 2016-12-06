@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { SortDetailCard } from './SortDetailCard';
 import { Loading } from './Loading';
+import { Tabs } from './Tabs';
 
 const SortDetailDeck: React.StatelessComponent<{ count: number, max: number }> = ({ count, max }) => {
   const arr = [];
@@ -11,12 +12,14 @@ const SortDetailDeck: React.StatelessComponent<{ count: number, max: number }> =
   return (
     <article className='sort-detail-deck'>
       <div className='flexRow'  style={{flexWrap: 'wrap'}}>
-        <SortDetailCard {...{max}} list={arr} algorithm={'quick'} className='flexCol' />
-        <SortDetailCard {...{max}} list={arr} algorithm={'merge'} className='flexCol' />
-        <SortDetailCard {...{max}} list={arr} algorithm={'shell'} className='flexCol' />
-        <SortDetailCard {...{max}} list={arr} algorithm={'insertion'} className='flexCol' />
-        <SortDetailCard {...{max}} list={arr} algorithm={'selection'} className='flexCol' />
-        <SortDetailCard {...{max}} list={arr} algorithm={'bubble'} className='flexCol' />
+        <Tabs>
+          <SortDetailCard {...{max}} list={arr} title={'quick Sort'} algorithm={'quick'} className='flexCol' />
+          <SortDetailCard {...{max}} list={arr} title={'merge Sort'} algorithm={'merge'} className='flexCol' />
+          <SortDetailCard {...{max}} list={arr} title={'shell Sort'} algorithm={'shell'} className='flexCol' />
+          <SortDetailCard {...{max}} list={arr} title={'insertion Sort'} algorithm={'insertion'} className='flexCol' />
+          <SortDetailCard {...{max}} list={arr} title={'selection Sort'} algorithm={'selection'} className='flexCol' />
+          <SortDetailCard {...{max}} list={arr} title={'bubble Sort'} algorithm={'bubble'} className='flexCol' />
+        </Tabs>
       </div>
     </article>
   );

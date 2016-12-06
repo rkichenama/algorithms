@@ -128,9 +128,24 @@ export class List extends Subject<any> {
   /**
    *
    */
-  put (i: number, v: any): void {
+  place (i: number, v: any): void {
     this.list[i] = v;
+  }
+  put (i: number, v: any): void {
+    this.place(i, v);
     this.mark(new Assignment(i, v));
+  }
+
+  /**
+   *
+   */
+  assign (i: number, v: any[]): void {
+    const indicies = v.map((v, j) => i + j);
+    indicies
+      .forEach((index, k) => {
+        this.place(index, v[k]);
+      });
+    this.mark(new Partition(indicies, v));
   }
 
   compare (i: number, j: number): number {

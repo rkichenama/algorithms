@@ -32,11 +32,14 @@ export class SortDetailCard extends React.Component<SortDetailProps, SortDetailS
     this.setState({ list, algorithm, max });
   }
 
+  componentWillUnmount () { console.info('unmounting'); }
+  componentDidMount () { console.info('mounting'); }
+
   render () {
     const { className, style } = this.props;
     return (
       <article className={`${className} card sort-detail`} style={style}>
-        <heading>{this.props.algorithm}</heading>
+        <heading>{this.props.algorithm} Sort</heading>
         <Tabs>
           <section className='flexRow' title='Visualization'>
             <ListCanvas {...this.state} />
