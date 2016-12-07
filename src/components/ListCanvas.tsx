@@ -55,14 +55,15 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
       Observable.fromEvent(document, 'cssthemechange')
         .subscribe(() => this.renderBars()),
       list
-        .filter((action) => /swap|insert|assignment|partition/.test(action.type))
-        .scan((p: Promise<any>, action: Action) => p.then(() => (
-          this[`_${action.type}`](action)
-        ).catch(() => {/* catch any rejections */})), Promise.resolve())
-        .subscribe(() => {}),
-      list
         .filter((action) => /swap|insert|compare|assignment|partition/.test(action.type))
-        .subscribe(this._calculate.bind(this)),
+        .reduce((p: Promise<any>, action: Action) => p.then(() => {
+            this._calculate(action); return this[`_${action.type}`](action);
+          }).catch(() => {/* catch any rejections */}), Promise.resolve()
+        )
+        .subscribe(() => { /* since the events are converted to promises, I cant do nothing */ }),
+      // list
+      //   .filter((action) => /swap|insert|compare|assignment|partition/.test(action.type))
+      //   .subscribe(this._calculate.bind(this)),
       list
         .filter(({type}) => /complete/.test(type))
         .subscribe(() => {
@@ -89,7 +90,7 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
   private _initAnimation ({ list: l, algorithm } = this.props) {
     const list = new List(l);
     this.list = [...l];
-    this.steps = ((l.length >= 250) ? 2 : ((l.length >= 100) ? 4 : 8));
+    this.steps = ((l.length >= 250) ? 2 : ((l.length >= 100) ? 6 : 18));
     this.colors = this.list.map(() => BarColorNormal);
     this.counts = {
       s: 0, i: 0, c: 0, m: 0
@@ -108,11 +109,20 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
   private _calculate (action: Action) {
     const key = `${/assignment|partition/.test(action.type) ? 'i' : action.type[0]}`;
     ++this.counts[key];
-    this[`__${/assignment|partition/.test(action.type) ? 'insert' : action.type}`].innerText = ++this.counts[key];
     if (/insert/.test(action.type)) {
       this.counts.m += (action.src - action.dest);
-      this._moves.innerText = Math.ceil(this.counts.m  / this.counts.i);
     }
+    [
+      this.__swap.innerText,
+      this.__insert.innerText,
+      this.__compare.innerText,
+      this._moves.innerText,
+    ] = [
+      this.counts.s || '-',
+      this.counts.i || '-',
+      this.counts.c || '-',
+      this.counts.m || '-',
+    ];
   }
 
   render () {
@@ -168,7 +178,8 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
 
     return this.loop(
       (mult) => {
-        list[src] = Math.floor(ith + mult * di);
+        list[src] = easeOutBounce(mult * this.steps, ith, di, this.steps);
+        // list[src] = Math.floor(ith + mult * di);
         colors[src] = BarColorSwap;
       },
       () => {
@@ -186,7 +197,8 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
     return this.loop(
       (mult) => {
         targets.forEach((t, i) => {
-          list[t] = Math.floor(iths[i] + mult * di[i]);
+          list[t] = easeOutBounce(mult * this.steps, iths[i], di[i], this.steps);
+          // list[t] = Math.floor(iths[i] + mult * di[i]);
           colors[t] = BarColorSwap;
         });
       },
@@ -210,7 +222,8 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
     return this.loop(
       (mult) => {
         for (let k = 0; k < ths.length; k++) {
-          list[k + j] = Math.floor(ths[k] + mult * deltas[k]);
+          list[k + j] = easeOutBounce(mult * this.steps, ths[k], deltas[k], this.steps);
+          // list[k + j] = Math.floor(ths[k] + mult * deltas[k]);
           colors[k + j] = BarColorInsert;
         }
       },
@@ -232,7 +245,11 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
 
     return this.loop(
       (mult) => {
-        [list[i], list[j]] = [ith + mult * di, jth + mult * dj].map(Math.floor);
+        [list[i], list[j]] = [
+          easeOutBounce(mult * this.steps, ith, di, this.steps),
+          easeOutBounce(mult * this.steps, jth, dj, this.steps)
+        ];
+        // [list[i], list[j]] = [ith + mult * di, jth + mult * dj].map(Math.floor);
         [colors[i], colors[j]] = [BarColorSwap, BarColorSwap];
       },
       () => {
@@ -278,3 +295,16 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
     };
   }
 }
+
+// t: current time, b: begInnIng value, c: change In value, d: duration
+const easeOutBounce = (t, b, c, d) => {
+  switch (true) {
+    case ((t /= d) < (1 / 2.75)): return c * (7.5625 * t * t) + b;
+  	case (t < (2 / 2.75)): return c * (7.5625 * (t -= (1.5 / 2.75)) * t + .75) + b;
+  	case (t < (2.5 / 2.75)): return c * (7.5625 * (t -= (2.25 / 2.75)) * t + .9375) + b;
+  	default: return c * (7.5625 * (t -= (2.625 / 2.75)) * t + .984375) + b;
+  }
+};
+
+// t: current time, b: begInnIng value, c: change In value, d: duration
+const easeOutBack = (t, b, c, d, s = 1.70158) => (c * (( t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b);

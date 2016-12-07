@@ -5,7 +5,7 @@
   "scripts": {
     "build": "webpack --display-error-details",
     "dev": "webpack-dev-server --inline --hot --content-base dist/ --port 4000 --open",
-    "preinstall": "mkdir dist && mkdir coverage",
+    "ppreinstall": "mkdir dist && mkdir coverage",
     "postinstall": "typings install && cp ./node_modules/react/dist/react.js ./dist/react.js && cp ./node_modules/react-dom/dist/react-dom.js ./dist/react-dom.js && cp ./node_modules/react-router/umd/ReactRouter.js ./dist/react-router.js",
     "test": "jasmine-ts",
     "posttest": "npm run lint",
