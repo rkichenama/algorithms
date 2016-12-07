@@ -127,25 +127,31 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
 
   render () {
     return (
-      <div className='flexRow list-visualization'>
-        <dl className='no-grow col-xs-4'>
-          <dt>Time (ms)</dt>
-          <dd ref={d => this._elapsed = d}>-</dd>
-
-          <dt>Swaps</dt>
-          <dd ref={d => this.__swap = d}>-</dd>
-
-          <dt>Inserts</dt>
-          <dd ref={d => this.__insert = d}>-</dd>
-
-          <dt>Shifts</dt>
-          <dd ref={d => this._moves = d}>-</dd>
-
-          <dt>Compares</dt>
-          <dd ref={d => this.__compare = d}>-</dd>
-        </dl>
+      <div className='flexCol list-visualization'>
         <div className='list-canvas'>
           <canvas ref={d => this.canvas = d}></canvas>
+        </div>
+        <div className='flexRow'>
+          <section className='flexRow'>
+            <div className='no-shrink no-grow col-xs-7'>Time (ms)</div>
+            <div ref={d => this._elapsed = d}>-</div>
+          </section>
+          <section className='flexRow'>
+            <div className='no-shrink no-grow col-xs-7'>Swaps</div>
+            <div ref={d => this.__swap = d}>-</div>
+          </section>
+          <section className='flexRow'>
+            <div className='no-shrink no-grow col-xs-7'>Inserts</div>
+            <div ref={d => this.__insert = d}>-</div>
+          </section>
+          <section className='flexRow'>
+            <div className='no-shrink no-grow col-xs-7'>Shifts</div>
+            <div ref={d => this._moves = d}>-</div>
+          </section>
+          <section className='flexRow'>
+            <div className='no-shrink no-grow col-xs-7'>Compares</div>
+            <div ref={d => this.__compare = d}>-</div>
+          </section>
         </div>
       </div>
     );
