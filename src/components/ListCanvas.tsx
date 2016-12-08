@@ -121,7 +121,7 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
       this.counts.s || '-',
       this.counts.i || '-',
       this.counts.c || '-',
-      this.counts.m || '-',
+      Math.ceil(this.counts.m / (this.counts.i || 1)) || '-',
     ];
   }
 
