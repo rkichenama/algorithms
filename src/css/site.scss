@@ -27,6 +27,10 @@ a {
   &, &:active, &:visited, &:hover, &focus {
     text-decoration: none;
     color: var(--clr-highlight);
+
+    &.active {
+      color: var(--clr-important);
+    }
   }
 }
 
@@ -58,10 +62,10 @@ a {
       @include flex-grow(1);
       @include flex-shrink(1);
     }
-    &[left] {
+    &[left], &[data-left] {
       @include justify-content(flex-start);
     }
-    &[right] {
+    &[right], &[data-right] {
       @include justify-content(flex-end);
     }
 
@@ -69,10 +73,10 @@ a {
   &Col {
     @include justify-content(flex-start);
     @include flex-direction(column);
-    &[center] {
+    &[center], &[data-center] {
       @include align-items(center);
     }
-    &[right] {
+    &[right], &[data-right] {
       @include align-items(flex-end);
     }
     > *:only-child {

@@ -10,10 +10,11 @@ interface BarColor {
   fg: string;
 }
 
-const BarColorNormal: BarColor  = {bg: '--clr-important', fg: '--clr-highlight'};
-const BarColorSwap: BarColor    = {bg: '--clr-important', fg: '--clr-accent'};
-const BarColorInsert: BarColor  = {bg: '--clr-highlight', fg: '--clr-important'};
-const BarColorCompare: BarColor = {bg: '--clr-black', fg: '--clr-white'};
+const BarColorNormal: BarColor     = {bg: '--clr-accent', fg: '--clr-accent'};
+const BarColorSwap: BarColor       = {bg: '--clr-important', fg: '--clr-important'};
+const BarColorInsert: BarColor     = {bg: '--clr-highlight', fg: '--clr-highlight'};
+const BarColorCompareSrc: BarColor = {bg: '--clr-black', fg: '--clr-white'};
+const BarColorCompareDes: BarColor = {bg: '--clr-accent', fg: '--clr-black'};
 
 export class ListCanvas extends React.Component< { algorithm: string, list: any[], max: number }, {} > {
   private steps: number;
@@ -101,9 +102,11 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
     this.setCanvas();
     this.renderBars();
 
-    let sort = new ObservableSort(list);
-    this._startTime = new Date();
-    sort[algorithm]();
+    setTimeout(() => {
+      const sort = new ObservableSort(list);
+      this._startTime = new Date();
+      sort[algorithm]();
+    }, 750);
   }
 
   private _calculate (action: Action) {
@@ -267,7 +270,7 @@ export class ListCanvas extends React.Component< { algorithm: string, list: any[
   private _compare ({src: i, dest: j}: Action): Promise<any> {
     const list = this.list, colors = this.colors;
     return this.loop(
-      (mult) => [colors[i], colors[j]] = [BarColorCompare, BarColorCompare],
+      (mult) => [colors[i], colors[j]] = [BarColorCompareSrc, BarColorCompareDes],
       () => [colors[i], colors[j]] = [BarColorNormal, BarColorNormal]
     );
   }
