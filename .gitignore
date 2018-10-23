@@ -1,6 +1,6 @@
 node_modules/
 tmp/
-dist/
+lib/
 yarn-error.log
 typings/
 **/.DS_Store

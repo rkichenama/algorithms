@@ -2,7 +2,14 @@
   "name": "algorithms",
   "version": "0.2.0",
   "description": "a playground for algorithms in javascript",
-  "scripts": {},
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
+    "build": "webpack --config ./webpack-config.js --mode development --run-dev false --progress",
+    "lib": "run-p -l lib:*",
+    "lib:types": "tsc --emitDeclarationOnly",
+    "lib:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rkichenama/algorithms.git"
@@ -13,5 +20,39 @@
     "url": "https://github.com/rkichenama/algorithms/issues"
   },
   "homepage": "https://github.com/rkichenama/algorithms#readme",
-  "dependencies": {}
+  "dependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.1.0",
+    "@types/react": "^16.4.18",
+    "@types/react-dom": "^16.0.9",
+    "babel-jest": "^23.6.0",
+    "babel-loader": "^8.0.4",
+    "css-loader": "^1.0.0",
+    "eslint": "^5.7.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-semistandard": "^12.0.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-babel": "^5.2.1",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-react": "^7.11.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^23.6.0",
+    "npm-run-all": "^4.1.3",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "sass-loader": "^7.1.0",
+    "typescript": "^3.1.3",
+    "webpack": "^4.22.0",
+    "webpack-cli": "^3.1.2"
+  }
 }

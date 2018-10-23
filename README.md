@@ -27,3 +27,5 @@ Functional programming concepts will also be demonstrated
 
 - Currying
 - WebWorkers and background tasks
+
+https://github.com/Microsoft/TypeScript-Babel-Starter#readme
