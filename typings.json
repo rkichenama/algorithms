@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "react": "github:cantide5ga/typed-react#42692d400db3c333394ec75bce9f6d09b5a0a769",
-    "react-dom": "github:cantide5ga/typed-react-dom#d498c5a1056d26babef04b56139628be1f59a357",
-    "react-router": "github:types/npm-react-router#503d095e265d0949d7097b83c9195884bde104d9"
-  }
-}

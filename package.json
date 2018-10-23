@@ -1,16 +1,8 @@
 {
   "name": "algorithms",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "description": "a playground for algorithms in javascript",
-  "scripts": {
-    "build": "webpack --display-error-details",
-    "dev": "webpack-dev-server --inline --hot --content-base dist/ --port 4000 --open",
-    "postinstall": "typings install && cp ./node_modules/react/dist/react.js ./dist/react.js && cp ./node_modules/react-dom/dist/react-dom.js ./dist/react-dom.js && cp ./node_modules/react-router/umd/ReactRouter.js ./dist/react-router.js",
-    "test": "jasmine-ts",
-    "posttest": "npm run lint",
-    "lint": "tslint ./src/**/*.{ts,tsx}",
-    "coverage": "istanbul cover ./node_modules/jasmine-ts/index.js && cat ./coverage/lcov.info | codacy-coverage"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rkichenama/algorithms.git"
@@ -21,41 +13,5 @@
     "url": "https://github.com/rkichenama/algorithms/issues"
   },
   "homepage": "https://github.com/rkichenama/algorithms#readme",
-  "dependencies": {
-    "@types/chai": "^3.4.34",
-    "@types/core-js": "^0.9.34",
-    "@types/highlight.js": "^9.1.8",
-    "@types/jasmine": "2.5.38",
-    "@types/node": "^6.0.46",
-    "codacy-coverage": "^2.0.0",
-    "css-loader": "0.26.0",
-    "file-loader": "^0.9.0",
-    "haml-loader": "^0.1.0",
-    "highlight.js": "^9.8.0",
-    "highlightjs-line-numbers.js": "^1.1.0",
-    "istanbul": "^0.4.5",
-    "jasmine": "^2.5.2",
-    "jasmine-core": "^2.5.2",
-    "jasmine-node": "^1.14.5",
-    "jasmine-spec-reporter": "^2.7.0",
-    "jasmine-ts": "^0.0.3",
-    "jsx-typescript": "^1.5.0-alpha.5",
-    "markdown-loader": "^0.1.7",
-    "node-sass": "3.13.0",
-    "react": "^15.3.2",
-    "react-dom": "^15.3.2",
-    "react-router": "^3.0.0",
-    "rx": "^4.1.0",
-    "rxjs": "5.0.0-rc.4",
-    "sass-loader": "^4.0.2",
-    "source-map-loader": "^0.1.5",
-    "style-loader": "^0.13.1",
-    "ts-loader": "1.2.2",
-    "tslint": "^4.0.2",
-    "typescript": "2.0.10",
-    "typings": "2.0.0",
-    "webpack": "^1.13.3",
-    "webpack-dev-server": "^1.16.2",
-    "yarn": "^0.17.9"
-  }
+  "dependencies": {}
 }
