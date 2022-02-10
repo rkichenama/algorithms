@@ -42,7 +42,7 @@
     "jasmine-ts": "^0.0.3",
     "jsx-typescript": "^1.5.0-alpha.5",
     "markdown-loader": "^0.1.7",
-    "node-sass": "3.13.0",
+    "node-sass": "7.0.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-router": "^3.0.0",
